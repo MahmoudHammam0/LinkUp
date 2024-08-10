@@ -4,13 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
-from models.User import user
-from models.Notification import notification
-from models.Message import message
-from models.Chat import chat
-from models.Like import like
-from models.Post import post
-from models.comment import comment
+from models.user import user
+from models.notification import Notification
+from models.message import Message
+from models.chat import Chat
+from models.like import Like
+from models.post import Post
+from models.comment import Comment
 
 
 class DBStorage:
