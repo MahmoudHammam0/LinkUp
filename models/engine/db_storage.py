@@ -2,9 +2,10 @@
 """ DBStorage class module """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from models.user import User
+from models.chat import Chat
+from models.message import Message
 
 
 class DBStorage:
@@ -14,6 +15,8 @@ class DBStorage:
     classes = {
             'BaseModel': BaseModel,
             'User': User,
+            'Chat': Chat,
+            'Message': Message
             }
 
     def __init__(self):
@@ -42,7 +45,7 @@ class DBStorage:
         objects_dict = {}
 
         if cls is None:
-            classes_to_query = [User]
+            classes_to_query = [User, Chat, Message]
         else:
             classes_to_query = [cls]
 

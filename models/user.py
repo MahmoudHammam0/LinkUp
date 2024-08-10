@@ -4,6 +4,7 @@ from sqlalchemy import Column, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from models.base_model import BaseModel, Base
+from models.chat import chat_users
 import bcrypt
 
 # many-to-many relationship table for followers
@@ -13,13 +14,6 @@ user_follower = Table(
     Column('user_id', String(60), ForeignKey('users.id'), primary_key=True),
     Column('follower_id', String(60), ForeignKey('users.id'), primary_key=True)
 )
-
-# chat_users = Table(
-#     'chat_user',
-#     Base.metadata,
-#     Column('chat_id', String(60), ForeignKey('chats.id'), primary_key=True),
-#     Column('user_id', String(60), ForeignKey('users.id'), primary_key=True)
-# )
 
 class User(BaseModel, Base, UserMixin):
     """ User class """
@@ -43,12 +37,12 @@ class User(BaseModel, Base, UserMixin):
     )
     
     # Relationships to other tables
-    # messages = relationship('Message', backref='user')
+    chats = relationship('Chat', secondary=chat_users, back_populates='users')
+    messages = relationship('Message', backref='user')
     # posts = relationship('Post', backref='user')
     # comments = relationship('Comment', backref='user')
     # likes = relationship('Like', backref='user')
     # notifications = relationship('Notification', backref='user')
-    # chats = relationship('Chat', secondary='chat_user', backref='users')
 
     @property
     def password(self):
