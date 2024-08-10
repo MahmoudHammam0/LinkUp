@@ -5,12 +5,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from models.user import User
-from models.notification import Notification
-from models.message import Message
-from models.chat import Chat
-from models.like import Like
-from models.post import Post
-from models.comment import Comment
 
 
 class DBStorage:
@@ -20,12 +14,6 @@ class DBStorage:
     classes = {
             'BaseModel': BaseModel,
             'User': User,
-            'Notification': Notification,
-            'Message': Message,
-            'Chat': Chat,
-            'Like': Like,
-            'Post': Post,
-            'Comment': Comment
             }
 
     def __init__(self):
@@ -38,10 +26,10 @@ class DBStorage:
         host = "localhost"
         db = "artisans_alley_db"
         """
-        user = "artall_user"
-        passwd = "artall_pwd"
+        user = "linkup_user"
+        passwd = "linkup_pwd"
         host = "localhost"
-        db = "artall_db"
+        db = "linkup_db"
 
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(user, passwd, host, db),
@@ -54,7 +42,7 @@ class DBStorage:
         objects_dict = {}
 
         if cls is None:
-            classes_to_query = [User, Notification, Message, Chat, Like, Post, Comment]
+            classes_to_query = [User]
         else:
             classes_to_query = [cls]
 
