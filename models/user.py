@@ -42,7 +42,7 @@ class User(BaseModel, Base, UserMixin):
     posts = relationship('Post', backref='user')
     comments = relationship('Comment', backref='user')
     likes = relationship('Like', backref='user')
-    # notifications = relationship('Notification', backref='user')
+    notifications = relationship('Notification', backref='user')
 
     @property
     def password(self):

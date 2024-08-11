@@ -9,6 +9,7 @@ from models.message import Message
 from models.post import Post
 from models.comment import Comment
 from models.like import Like
+from models.notification import Notification
 
 
 class DBStorage:
@@ -22,7 +23,8 @@ class DBStorage:
             'Message': Message,
             'Post': Post,
             'Comment': Comment,
-            'Like': Like
+            'Like': Like,
+            'Notification': Notification
             }
 
     def __init__(self):
@@ -51,7 +53,7 @@ class DBStorage:
         objects_dict = {}
 
         if cls is None:
-            classes_to_query = [User, Chat, Message, Post, Comment, Like]
+            classes_to_query = [User, Chat, Message, Post, Comment, Like, Notification]
         else:
             classes_to_query = [cls]
 

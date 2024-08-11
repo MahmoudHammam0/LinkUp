@@ -5,6 +5,7 @@ from models.message import Message
 from models.post import Post
 from models.comment import Comment
 from models.like import Like
+from models.notification import Notification
 from models import storage
 
 
@@ -125,5 +126,18 @@ new_like2.save()
 print("Likes on the post:")
 for like in new_post.likes:
     print(like)
+
+# Test Notification
+new_notification = Notification(
+    content="You have a new message!",
+    type="Message",
+    read=False,
+    user_id=new_user.id
+)
+new_notification.save()
+
+print("Notifications for new_user:")
+for notification in new_user.notifications:
+    print(notification)
 
 print("DONE!")
