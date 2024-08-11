@@ -39,9 +39,9 @@ class User(BaseModel, Base, UserMixin):
     # Relationships to other tables
     chats = relationship('Chat', secondary=chat_users, back_populates='users')
     messages = relationship('Message', backref='user')
-    # posts = relationship('Post', backref='user')
-    # comments = relationship('Comment', backref='user')
-    # likes = relationship('Like', backref='user')
+    posts = relationship('Post', backref='user')
+    comments = relationship('Comment', backref='user')
+    likes = relationship('Like', backref='user')
     # notifications = relationship('Notification', backref='user')
 
     @property

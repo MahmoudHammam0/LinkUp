@@ -2,6 +2,9 @@
 from models.user import User
 from models.chat import Chat
 from models.message import Message
+from models.post import Post
+from models.comment import Comment
+from models.like import Like
 from models import storage
 
 
@@ -75,5 +78,52 @@ print("Chat messages: ")
 for msg in new_chat.messages:
     print(msg)
 
+
+# Create and save a post
+new_post = Post(
+    title="My First Post",
+    content="This is the content of my first post.",
+    user_id=new_user.id
+)
+new_post.save()
+
+print("Posts for new_user:")
+print(new_user.posts)
+
+# Create and save comments
+new_comment = Comment(
+    content="Great post!",
+    user_id=new_user3.id,
+    post_id=new_post.id
+)
+new_comment.save()
+
+new_comment2 = Comment(
+    content="I agree!",
+    user_id=new_user4.id,
+    post_id=new_post.id
+)
+new_comment2.save()
+
+print("Comments on the post:")
+for comment in new_post.comments:
+    print(comment)
+
+# Create and save likes
+new_like = Like(
+    user_id=new_user.id,
+    post_id=new_post.id
+)
+new_like.save()
+
+new_like2 = Like(
+    user_id=new_user3.id,
+    post_id=new_post.id
+)
+new_like2.save()
+
+print("Likes on the post:")
+for like in new_post.likes:
+    print(like)
 
 print("DONE!")

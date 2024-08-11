@@ -6,6 +6,9 @@ from models.base_model import BaseModel, Base
 from models.user import User
 from models.chat import Chat
 from models.message import Message
+from models.post import Post
+from models.comment import Comment
+from models.like import Like
 
 
 class DBStorage:
@@ -16,7 +19,10 @@ class DBStorage:
             'BaseModel': BaseModel,
             'User': User,
             'Chat': Chat,
-            'Message': Message
+            'Message': Message,
+            'Post': Post,
+            'Comment': Comment,
+            'Like': Like
             }
 
     def __init__(self):
@@ -45,7 +51,7 @@ class DBStorage:
         objects_dict = {}
 
         if cls is None:
-            classes_to_query = [User, Chat, Message]
+            classes_to_query = [User, Chat, Message, Post, Comment, Like]
         else:
             classes_to_query = [cls]
 
