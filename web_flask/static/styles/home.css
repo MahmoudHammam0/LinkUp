@@ -8,8 +8,25 @@ body {
     flex-direction: column;
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-image: linear-gradient(135deg, #ded3eb -15%, #fff 80%);
+    background: linear-gradient(135deg, #ded3eb -15%, #fff 80%);
+    position: relative;
+    overflow: hidden;
 }
+
+body::before {
+    content: "";
+    position: absolute;
+    bottom: -56px;
+    left: -214px;
+    width: 900px;
+    height: 750px;
+    background: url('../images/logo_cut.png') no-repeat;
+    background-size: cover;
+    opacity: 0.06;
+    z-index: -1;
+    transform: rotate(-30deg);
+}
+
 
 .header-container {
     padding: 15px 40px;
@@ -23,10 +40,18 @@ body {
 }
 
 .title {
-    font-size: 36px;
+    font-size: 50px;
     letter-spacing: 1px;
     font-weight: 700;
-    color: #fff;
+    color: #7656a2;
+    margin-left: 20px;
+}
+
+.slogan {
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #cea5cce6;
     margin-left: 20px;
 }
 
@@ -38,6 +63,11 @@ body {
 .logo img {
     height: 4%;
     width: 4%;
+}
+
+.login {
+    margin-bottom: 35px;
+    color: #634fa5;
 }
 
 .main-container {
