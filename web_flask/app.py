@@ -11,6 +11,11 @@ def home():
     "Home page"
     return render_template('home.html')
 
+@app.route('/profile', strict_slashes=False)
+def profile():
+    "user profile page"
+    return render_template('profile.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
