@@ -1,0 +1,255 @@
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f2f5;
+}
+
+/* Header styles */
+header {
+    background-color: #ffffff;
+    padding: 10px 150px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo img {
+    width: 24px;
+    margin-left: 155px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav input {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #b1b1b157;
+    width: 300px;
+    background-color: #d9c0de21;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    margin-right: 90px;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #895ea8;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Main content styles */
+main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Profile card styles */
+.profile-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.profile-card img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.profile-card .stats {
+    margin-top: 10px;
+}
+
+/* Feed styles */
+.feed {
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+.post-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.post-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.post-form button {
+    background-color: #895ea8;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.post {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.post header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    box-shadow: none;
+    padding: 0;
+}
+
+.post header img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.post .user-info h5 {
+    font-size: 13px;
+    color: darkgrey;
+    font-weight: 400;
+    margin-top: -6px;
+}
+
+.post .text-content {
+    padding: 10px;
+}
+
+.likes-counter {
+    font-size: 0.9em;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.likes-counter span {
+    display: block;
+    color: darkgrey;
+    font-weight: 400;
+}
+
+.likes-counter .like-symbol {
+    width: 16px;
+    height: 16px;
+    align-self: center;
+    margin-right: 8px;
+}
+
+.post .post-buttons {
+    border-top: 1px solid #e2dede;
+    display: flex;
+    align-items: center;
+}
+
+.thumbsup-symbol {
+    width: 35px;
+    height: 35px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.comment-symbol {
+    width: 20px;
+    height: 20px;
+    margin-top: 10px;
+    margin-right: 6px;
+    cursor: pointer;
+    filter: invert(48%) sepia(0%) saturate(3242%) hue-rotate(130deg) brightness(86%) contrast(114%);
+}
+
+.post .post-buttons button {
+    background-color: white;
+    color: grey;
+    border: none;
+    padding: 8px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 33px;
+}
+
+/* Suggestions styles */
+.suggestions {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.suggestions ul {
+    list-style-type: none;
+    margin-top: 15px;
+}
+
+.suggestions li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.suggestions li img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+}
+
+.suggestions button {
+    background-color: #f5e7ff;
+    color: #895ea8;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-left: 15px;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    margin-top: 20px;
+    position: absolute;
+    bottom: 0;
+    width: -webkit-fill-available;
+}

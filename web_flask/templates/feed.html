@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Up</title>
+    <link rel="icon" href="../static/images/logo.png"/>
+    <link rel="stylesheet" href="../static/styles/feed.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../static/images/logo_cut.png">
+            </div>
+            <input type="text" placeholder="Search...">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Messages</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <aside class="profile-card">
+            <img src="../static/images/1.jpg" alt="Profile Picture">
+            <h2>Mahmoud Youssef</h2>
+            <p>Web Developer</p>
+            <div class="stats">
+                <div>Posts: 123</div>
+                <div>Followers: 456</div>
+                <div>Following: 789</div>
+            </div>
+        </aside>
+        
+        <section class="feed">
+            <div class="post-form">
+                <textarea placeholder="What's on your mind?"></textarea>
+                <button>Post</button>
+            </div>
+            
+            <article class="post">
+                <header>
+                    <img src="../static/images/4.jpg" alt="User Avatar">
+                    <div class="user-info">
+                        <h3>Some User</h3>
+                        <h5>2 hours ago</h5>
+                    </div>
+                </header>
+                <p class="text-content">Just finished a great project! #coding #webdev</p>
+                <div class="likes-counter">
+                    <img class="like-symbol" src="../static/images/like_symbol.png">
+                    <span>123 Likes</span>
+                </div>
+                <div class="post-buttons">
+                    <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                    <button>Like</button>
+                    <img class="comment-symbol" src="../static/images/comment-symbol.png">
+                    <button>Comment</button>
+                </div>
+            </article>
+            
+        </section>
+        
+        <aside class="suggestions">
+            <h3>Who to follow</h3>
+            <ul>
+                <li>
+                    <img src="../static/images/3.jpg" alt="User Avatar">
+                    <span>Mahmoud Hammam</span>
+                    <button>Follow</button>
+                </li>
+                <li>
+                    <img src="../static/images/2.jpg" alt="User Avatar">
+                    <span>Youssef El Ghamour</span>
+                    <button>Follow</button>
+                </li>
+            </ul>
+        </aside>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 LinkUp</p>
+    </footer>
+</body>
+</html>

@@ -16,6 +16,11 @@ def profile():
     "user profile page"
     return render_template('profile.html')
 
+@app.route('/feed', strict_slashes=False)
+def feed():
+    "feed page"
+    return render_template('feed.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
