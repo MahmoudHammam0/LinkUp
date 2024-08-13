@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 "Flask app"
 from flask import Flask, render_template
+from models import storage
+from models.user import User
 
 
 app = Flask(__name__)
@@ -11,10 +13,12 @@ def home():
     "Home page"
     return render_template('home.html')
 
-@app.route('/profile', strict_slashes=False)
-def profile():
+@app.route('/profile/<user_id>', strict_slashes=False)
+def profile(user_id):
     "user profile page"
-    return render_template('profile.html')
+    retrieved_user = storage.get(User, user_id)
+
+    return render_template('profile.html', user=retrieved_user)
 
 @app.route('/feed', strict_slashes=False)
 def feed():
