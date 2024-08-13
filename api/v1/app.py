@@ -19,7 +19,12 @@ def tear_down(e):
 
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({"Error": error.description}), 404
+    return jsonify({"Error": "Not Found"}), 404
+
+
+@app.errorhandler(400)
+def not_found(error):
+    return jsonify({"Error": error.description}), 400
 
 
 if __name__ == "__main__":

@@ -110,15 +110,13 @@ class DBStorage:
         else:
             return len(self.all())
 
-    """
-    def check_email(self, email):
-        user = self.__session.query(User).filter(User.email==email).first()
+    def email_username_check(self, email_to_check, username_to_check):
+        "check the email and username before the user creation"
+        info_valid = {}
+        user = self.__session.query(User).filter_by(email=email_to_check).first()
         if user:
-            return user
-        else:
-            user = self.__session.query(Artisan).filter(Artisan.email==email).first()
-            if user:
-                return user
-            else:
-                return None
-    """
+            info_valid["email"] = "Email already exists"
+        user = self.__session.query(User).filter_by(username=username_to_check).first()
+        if user:
+            info_valid["username"] = "User name already exists"
+        return info_valid
