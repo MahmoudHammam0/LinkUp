@@ -8,7 +8,6 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-cors = CORS(app)
 app.config['SECRET_KEY'] = '420d61563971313761f2e61f'
 login_manager = LoginManager(app)
 
