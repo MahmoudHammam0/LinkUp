@@ -4,9 +4,11 @@ from flask import Flask, render_template, redirect, request, url_for, abort, jso
 from models import storage
 from models.user import User
 from flask_login import LoginManager, login_user, logout_user
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config['SECRET_KEY'] = '420d61563971313761f2e61f'
 login_manager = LoginManager(app)
 
