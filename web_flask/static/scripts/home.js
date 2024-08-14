@@ -8,6 +8,7 @@ $(document).ready(function() {
         $('form').fadeOut(400, function() {
 
             $('form').empty();
+            $('.error').empty();
             
             $('form').append(`
                 <input type="text" placeholder="Username">
@@ -33,6 +34,7 @@ $(document).ready(function() {
         $('form').fadeOut(400, function() {
 
             $('form').empty();
+            $('.error').empty();
             
             $('form').append(`
                 <input type="email" placeholder="Email">
@@ -65,7 +67,7 @@ $(document).ready(function() {
                 window.location.href = res.redirect_url 
             },
             error: function(x, status, error) {
-                $('.error').append(x.responseJSON.Error);
+                $('.error').html(x.responseJSON.Error);
             }
         })
     })
