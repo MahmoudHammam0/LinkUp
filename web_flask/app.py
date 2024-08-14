@@ -3,8 +3,7 @@
 from flask import Flask, render_template, redirect, request, url_for, abort, jsonify, flash
 from models import storage
 from models.user import User
-from flask_login import LoginManager, login_user, logout_user
-from flask_cors import CORS
+from flask_login import LoginManager, login_user, logout_user, current_user
 
 
 app = Flask(__name__)
@@ -15,25 +14,28 @@ login_manager = LoginManager(app)
 @app.route('/', strict_slashes=False, methods=["GET", "POST"])
 def home():
     "Home page"
-    if request.method == "POST":
-        user_data = request.get_json()
-        if not user_data:
-            abort(400, 'Not A Valid Json')
+    if not current_user.is_authenticated:
+        if request.method == "POST":
+            user_data = request.get_json()
+            if not user_data:
+                abort(400, 'Not A Valid Json')
 
-        required_data = ["email", "password"]
-        for info in required_data:
-            if info not in user_data.keys():
-                abort(400, f"Missing {info.capitalize()}")
+            required_data = ["email", "password"]
+            for info in required_data:
+                if info not in user_data.keys():
+                    abort(400, f"Missing {info.capitalize()}")
 
-        user = storage.check_credentials(
-            user_data['email'], user_data['password'])
-        if user:
-            login_user(user)
-            flash(f"{user.username} logged in successfully", 'success')
-            return jsonify({"Success": True, "redirect_url": url_for('feed')})
-        else:
-            abort(400, 'You have entered an invalid Email or Password')
-    return render_template('home.html')
+            user = storage.check_credentials(
+                user_data['email'], user_data['password'])
+            if user:
+                login_user(user)
+                flash(f"{user.username} logged in successfully", 'success')
+                return jsonify({"Success": True, "redirect_url": url_for('home')})
+            else:
+                abort(400, 'You have entered an invalid Email or Password')
+        return render_template('home.html')
+    
+    return render_template('feed.html')
 
 @app.route('/profile/<user_id>')
 def profile(user_id):
@@ -41,11 +43,6 @@ def profile(user_id):
     retrieved_user = storage.get(User, user_id)
 
     return render_template('profile.html', user=retrieved_user)
-
-@app.route('/feed')
-def feed():
-    "feed page"
-    return render_template('feed.html')
 
 
 @app.route('/logout')
