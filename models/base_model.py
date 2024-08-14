@@ -61,6 +61,7 @@ class BaseModel:
             del res['_sa_instance_state']
         res['created_at'] = res['created_at'].isoformat()
         res['updated_at'] = res['updated_at'].isoformat()
+        res['password_hash'] = res['password_hash'].decode('utf-8')
         res['__class__'] = self.__class__.__name__
         return res
 

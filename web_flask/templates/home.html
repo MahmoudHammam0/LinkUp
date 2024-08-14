@@ -6,6 +6,8 @@
     <title>Link Up</title>
     <link rel="icon" href="../static/images/logo.png" />
     <link rel="stylesheet" href="../static/styles/home.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../static/scripts/home.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
 </head>
@@ -31,9 +33,10 @@
         <div class="l-cont">
             <div class="form-container">
                 <h2 class="login">Login</h2>
-                <form>
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password">
+                <div class="error"></div>
+                <form class="login-form">
+                    <input id="email" type="email" placeholder="Email">
+                    <input id="password" type="password" placeholder="Password">
                     <input type="submit" value="Log in">
                 </form>
                 <hr>

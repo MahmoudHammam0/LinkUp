@@ -120,3 +120,14 @@ class DBStorage:
         if user:
             info_valid["username"] = "User name already exists"
         return info_valid
+    
+    def check_credentials(self, attempted_email, attempted_password):
+        "check the email and password attempted by the user"
+        user = self.__session.query(User).filter_by(email=attempted_email).first()
+        if user:
+            if user.check_password(attempted_password):
+                return user
+            else:
+                return False
+        else:
+            return False

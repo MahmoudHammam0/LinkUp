@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ User module """
-from sqlalchemy import Column, String, ForeignKey, Table
+from sqlalchemy import Column, String, ForeignKey, Table, LargeBinary
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from models.base_model import BaseModel, Base
@@ -22,7 +22,7 @@ class User(BaseModel, Base, UserMixin):
     username = Column(String(30), unique=True, nullable=False)
     name = Column(String(128), nullable=False)
     email = Column(String(128), unique=True, nullable=False)
-    password_hash = Column(String(128), nullable=False)
+    password_hash = Column(LargeBinary, nullable=False)
     picture = Column(String(1000), nullable=True)
 
     # Many-to-many relationship for followers
