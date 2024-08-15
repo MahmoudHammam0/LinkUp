@@ -77,3 +77,31 @@ def edit_user(user_id):
 
     user.save()
     return jsonify(user.to_dict())
+
+
+@app_views.route("/users/<user_id>/followers", methods=["GET"])
+def get_followers_of_user(user_id):
+    "return followers of a specific user"
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    
+    followers = []
+    for follower in user.followers:
+        followers.append(follower.to_dict())
+    
+    return jsonify(followers)
+
+
+@app_views.route("/users/<user_id>/following", methods=["GET"])
+def get_following_of_user(user_id):
+    "return users that the current user is following"
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    
+    following = []
+    for account in user.following:
+        following.append(account.to_dict())
+    
+    return jsonify(following)

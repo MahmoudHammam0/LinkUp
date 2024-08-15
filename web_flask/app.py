@@ -35,7 +35,7 @@ def home():
                 abort(400, 'You have entered an invalid Email or Password')
         return render_template('home.html')
     
-    return render_template('feed.html')
+    return render_template('feed.html', user=current_user)
 
 @app.route('/profile/<user_id>')
 def profile(user_id):

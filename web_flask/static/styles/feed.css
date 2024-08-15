@@ -70,18 +70,45 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-align: center;
+    width: 20%;
+}
+.profile-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: max-content;
 }
 
 .profile-card img {
     border-radius: 50%;
     margin-bottom: 10px;
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
+    box-shadow: 1px 4px 9px rgba(0, 0, 0, 0.2);
+}
+
+.profile-card h2 {
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+    width: 184px;
+}
+
+.profile-card p {
+    font-weight: 400;
+    font-size: 13px;
+    color: slategrey;
 }
 
 .profile-card .stats {
     margin-top: 10px;
+}
+
+.profile-card .stats h2 {
+    font-weight: 300;
+    font-size: 13.9px;
 }
 
 /* Feed styles */
