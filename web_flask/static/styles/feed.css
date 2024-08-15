@@ -59,7 +59,7 @@ main {
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
 }
 
@@ -237,6 +237,7 @@ main {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 25%;
 }
 
 .suggestions h3 {
@@ -287,6 +288,19 @@ main {
     cursor: pointer;
     margin-left: auto;
     border: 1px solid #895ea8;
+    border-radius: 20px;
+    font-size: 12px;
+    width: 90px;
+}
+
+.suggestions .unfollow-button {
+    background-color: #895ea8;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: auto;
+    border: 1px solid white;
     border-radius: 20px;
     font-size: 12px;
 }

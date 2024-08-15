@@ -105,3 +105,43 @@ def get_following_of_user(user_id):
         following.append(account.to_dict())
     
     return jsonify(following)
+
+
+@app_views.route("/users/<user_id>/follow/<user_to_follow_id>", methods=["POST"])
+def follow_user(user_id, user_to_follow_id):
+    "adds a user to the list of users the signed-in user is following"
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    
+    user_to_follow = storage.get(User, user_to_follow_id)
+    if not user_to_follow:
+        abort(404)
+    
+    if user_to_follow in user.following:
+        return jsonify({"error": "User already followed"}), 400
+    
+    user.following.append(user_to_follow)
+    user.save()
+
+    return jsonify({"message": "User followed successfully"}), 201
+
+
+@app_views.route("/users/<user_id>/unfollow/<user_to_unfollow_id>", methods=["POST"])
+def unfollow_user(user_id, user_to_unfollow_id):
+    "removes a user from the list of users the signed-in user is following"
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    
+    user_to_unfollow = storage.get(User, user_to_unfollow_id)
+    if not user_to_unfollow:
+        abort(404)
+    
+    if user_to_unfollow not in user.following:
+        return jsonify({"error": "User not being followed"}), 400
+    
+    user.following.remove(user_to_unfollow)
+    user.save()
+
+    return jsonify({"message": "User unfollowed successfully"}), 201

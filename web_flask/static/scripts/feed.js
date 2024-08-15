@@ -2,44 +2,52 @@ const $ = window.$;
 $(document).ready(function() {
 
     const userId = $('.stats').data('user-id');
-    if (userId) {
-        $.ajax({
-            url: `http://localhost:5001/api/v1/users/${userId}/posts`,
-            type: 'GET',
-            success: function (response) {
-                let totalPosts = 0;
-                response.forEach(function (post) {
-                    totalPosts++;
-                });
-                $('#posts-count').append(totalPosts);
-            }
-        });
 
-        $.ajax({
-            url: `http://localhost:5001/api/v1/users/${userId}/followers`,
-            type: 'GET',
-            success: function (response) {
-                let totalFollowers = 0;
-                response.forEach(function (post) {
-                    totalFollowers++;
-                });
-                $('#followers-count').append(totalFollowers);
-            }
-        });
+    // Profile Card section ************************************************
 
-        $.ajax({
-            url: `http://localhost:5001/api/v1/users/${userId}/following`,
-            type: 'GET',
-            success: function (response) {
-                let totalFollowing = 0;
-                response.forEach(function (post) {
-                    totalFollowing++;
-                });
-                $('#following-count').append(totalFollowing);
-            }
-        });
-    }
+    // The number of posts
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}/posts`,
+        type: 'GET',
+        success: function (response) {
+            let totalPosts = 0;
+            response.forEach(function (post) {
+                totalPosts++;
+            });
+            $('#posts-count').append(totalPosts);
+        }
+    });
 
+    //The number of followers
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}/followers`,
+        type: 'GET',
+        success: function (response) {
+            let totalFollowers = 0;
+            response.forEach(function (post) {
+                totalFollowers++;
+            });
+            $('#followers-count').append(totalFollowers);
+        }
+    });
+
+    // The number of following
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}/following`,
+        type: 'GET',
+        success: function (response) {
+            let totalFollowing = 0;
+            response.forEach(function (post) {
+                totalFollowing++;
+            });
+            $('#following-count').append(totalFollowing);
+        }
+    });
+
+
+    // Suggestions section ***************************************************
+
+    // Display Suggested users to follow
     $.ajax({
         url: 'http://localhost:5001/api/v1/users',
         method: 'GET',
@@ -82,20 +90,64 @@ $(document).ready(function() {
                             </li>
                         `);
                     }
-    
-                    // Click event for follow button
-                    /*
-                    $('.follow-button').click(function() {
-                        const followUserId = $(this).data('user-id');
-                        $.ajax({
-                            url: `http://localhost:5001/api/v1/users/${userId}/follow/${followUserId}`,
-                            method: 'POST'
-                        });
-                    });
-                    */
                 }
             });
         }
+    });
+
+
+    // Follow Button
+    $(document).on('click', '.follow-button', function() {
+        const followButton = $(this);
+        const followUserId = $(this).data('user-id');
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${userId}/follow/${followUserId}`,
+            method: 'POST',
+            success: function() {
+                // Update the button after following the user
+                followButton.removeClass('follow-button').addClass('unfollow-button').text('Following')
+    
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${userId}/followers`,
+                    type: 'GET',
+                    success: function (response) {
+                        let totalFollowers = 0;
+                        response.forEach(function (post) {
+                            totalFollowers++;
+                        });
+                        $('#following-count').text(`Following: ${totalFollowers}`);
+                    }
+                });
+            },
+        });
+    });
+
+    // Unfollow Button
+    $(document).on('click', '.unfollow-button', function() {
+        const unfollowButton = $(this);
+        const unfollowUserId = unfollowButton.data('user-id');
+    
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${userId}/unfollow/${unfollowUserId}`,
+            method: 'POST',
+            success: function() {
+                // Change button back to "Follow"
+                unfollowButton.removeClass('unfollow-button').addClass('follow-button').text('Follow');
+
+                // Update followers count
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${userId}/following`,
+                    type: 'GET',
+                    success: function (response) {
+                        let totalFollowing = 0;
+                        response.forEach(function (post) {
+                            totalFollowing++;
+                        });
+                        $('#following-count').text(`Following: ${totalFollowing}`);
+                    }
+                });
+            }
+        });
     });
 
 });
