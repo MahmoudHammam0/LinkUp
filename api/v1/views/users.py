@@ -40,13 +40,10 @@ def create_user():
     check_info = storage.email_username_check(
         user_data["email"], user_data["username"])
     if check_info:
-        msg = list(check_info.values())
-        error = ", and ".join(msg)
-        abort(400, error)
+        abort(400, check_info)
 
     new_user = User(**user_data)
     new_user.save()
-    new_user.password_hash = new_user.password_hash.decode('utf-8')
 
     return jsonify(new_user.to_dict()), 201
 
