@@ -239,6 +239,12 @@ main {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.suggestions h3 {
+    font-size: 14px;
+    font-weight: 400;
+    color: darkgrey;
+}
+
 .suggestions ul {
     list-style-type: none;
     margin-top: 15px;
@@ -259,15 +265,35 @@ main {
     object-fit: cover;
 }
 
+.suggestions li span {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #895ea8;
+    font-weight: bold;
+}
+
+.suggestions li span h5 {
+    color: darkgrey;
+    margin-top: -2px;
+    font-weight: 100;
+    font-size: 11px;
+}
+
 .suggestions button {
-    background-color: #f5e7ff;
+    background-color: white;
     color: #895ea8;
     border: none;
     padding: 5px 10px;
-    border-radius: 4px;
     cursor: pointer;
     margin-left: auto;
-    margin-left: 15px;
+    border: 1px solid #895ea8;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.suggestions button:hover {
+    background-color: #895ea8;
+    color: white;
 }
 
 /* Footer styles */
