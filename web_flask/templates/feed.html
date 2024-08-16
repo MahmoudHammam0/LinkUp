@@ -48,8 +48,20 @@
         <section class="feed">
             <div class="post-form" data-user-id="{{ user.id }}">
                 <textarea name="content" placeholder="What's on your mind?"></textarea>
+                <div class="image-preview"></div>
                 <div class="post-btn-err">
-                    <button>Post</button>
+                    <div class="upload-section">
+                        <label for="file-upload" class="photo-upload-button">
+                            <div class="photo-icon-container">
+                                <img class="photo-icon" src="../static/images/image-icon.png">
+                            </div>
+                            <h5>Photo/Video</h5>
+                        </label>
+                        <input type="file" id="file-upload" name="image" accept="image/*">
+                    </div>
+
+                    <button class="post-button" style="display: none;">Post</button>
+
                     <div class="error-message"></div>
                 </div>
             </div>

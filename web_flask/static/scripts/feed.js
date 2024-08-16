@@ -9,19 +9,6 @@ $(document).ready(function() {
         return `${formattedDate} ${date.getHours() >= 12 ? 'pm' : 'am'}`;
     }
 
-    // Changes Color of Post form when textarea is selected or typing
-    $('.post-form').on('click', function() {
-        $(this).addClass('typing');
-    
-        // Handle click events outside the form
-        $(document).on('click', function(event) {
-            if (!$(event.target).is('.post-form, .post-form *')) {
-                // Remove 'typing' class if clicked outside the form
-                $('.post-form').removeClass('typing');
-            }
-        });
-    });
-
     const userId = $('.stats').data('user-id');
 
     // Profile Card section ************************************************
@@ -134,8 +121,9 @@ $(document).ready(function() {
                         // Prepend the new post to the feed
                         $('.feed').children().first().after(newPost);
 
-                        // Clear the textarea
+                        // Clear the textarea and the uploaded image
                         $('textarea[name="content"]').val('');
+                        $('.image-preview').html('');
                     },
                     error: function(xhr, status, error) {
                         console.error('Failed to fetch user details.', xhr.responseText);
@@ -146,6 +134,46 @@ $(document).ready(function() {
                 console.error('Failed to create post.', xhr.responseText);
             }
         });
+    });
+
+    // Changes Color of Post form when textarea is selected or typing
+    $('.post-form').on('click', function() {
+        $(this).addClass('typing');
+    
+        // Handle click events outside the form
+        $(document).on('click', function(event) {
+            if (!$(event.target).is('.post-form, .post-form *')) {
+                // Remove 'typing' class if clicked outside the form
+                $('.post-form').removeClass('typing');
+            }
+        });
+    });
+
+    // Show the button when the user writes something
+    $('textarea[name="content"]').on('input', function() {
+        const content = $(this).val().trim();
+    
+        if (content.length > 0) {
+            $('.post-button').fadeIn();
+        } else {
+            $('.post-button').fadeOut();
+        }
+    });
+
+    // Handle file upload and preview
+    $('#file-upload').on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Display the uploaded image in the preview section
+                $('.image-preview').html(`<img src="${e.target.result}" alt="Image Preview">`);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Clear the preview if no file is selected
+            $('.image-preview').html('');
+        }
     });
 
 
