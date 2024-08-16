@@ -9,6 +9,19 @@ $(document).ready(function() {
         return `${formattedDate} ${date.getHours() >= 12 ? 'pm' : 'am'}`;
     }
 
+    // Changes Color of Post form when textarea is selected or typing
+    $('.post-form').on('click', function() {
+        $(this).addClass('typing');
+    
+        // Handle click events outside the form
+        $(document).on('click', function(event) {
+            if (!$(event.target).is('.post-form, .post-form *')) {
+                // Remove 'typing' class if clicked outside the form
+                $('.post-form').removeClass('typing');
+            }
+        });
+    });
+
     const userId = $('.stats').data('user-id');
 
     // Profile Card section ************************************************
@@ -62,6 +75,11 @@ $(document).ready(function() {
         const content = $('textarea[name="content"]').val();
         const userId = $('.post-form').data('user-id');
         const title = "Feed Title"; // Random static title for now
+
+        if (!content.trim()) {
+            $('.error-message').text('Did you forget to write something?').show().delay(3000).fadeOut();
+            return;
+        }
 
         const postData = {
             title: title,

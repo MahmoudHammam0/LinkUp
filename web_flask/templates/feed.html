@@ -48,7 +48,10 @@
         <section class="feed">
             <div class="post-form" data-user-id="{{ user.id }}">
                 <textarea name="content" placeholder="What's on your mind?"></textarea>
-                <button>Post</button>
+                <div class="post-btn-err">
+                    <button>Post</button>
+                    <div class="error-message"></div>
+                </div>
             </div>
             
             <article class="post">

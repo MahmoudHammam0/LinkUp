@@ -9,6 +9,24 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     background-color: #f0f2f5;
+    background: linear-gradient(40deg, #ded3eb53 -15%, #e1dbe744 80%);
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    bottom: -183px;
+    left: 10%;
+    width: 1205px;
+    height: 1036px;
+    background: url(../images/logo_cut.png) no-repeat;
+    background-size: cover;
+    opacity: 0.06;
+    z-index: -1;
+    pointer-events: none;
+    transform: rotate(-30deg);
+    filter: blur(7px);
 }
 
 /* Header styles */
@@ -71,6 +89,7 @@ main {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-align: center;
     width: 20%;
+    border-radius: 20px;
 }
 .profile-card {
     text-align: center;
@@ -124,6 +143,7 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
+    border-radius: 20px;
 }
 
 .post-form textarea {
@@ -142,6 +162,12 @@ main {
     font-weight: normal;
 }
 
+.post-form .post-btn-err {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
 .post-form button {
     background-color: #895ea8;
     color: #ffffff;
@@ -149,15 +175,33 @@ main {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    border-radius: 20px;
+}
+
+.post-form.typing {
+    /*
+    transition: background-color 0.3s ease-in;
+    background: linear-gradient(200deg, #ae9cc0 -50%, #f6f4f8 80%); */
+    transition: background-color 0.3s;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.error-message {
+    display: none;
+    color: #ff00007a;
+    font-size: 11px;
+    margin-left: 10px;
 }
 
 .post {
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
+    border-radius: 20px;
 }
 
 .post header {
@@ -248,6 +292,7 @@ main {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 25%;
     height: max-content;
+    border-radius: 20px;
 }
 
 .suggestions h3 {
