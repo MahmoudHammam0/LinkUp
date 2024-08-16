@@ -115,6 +115,7 @@ main {
 .feed {
     flex-grow: 1;
     margin: 0 20px;
+    min-height: 617px;
 }
 
 .post-form {
@@ -131,6 +132,14 @@ main {
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: vertical;
+    font-family: 'Roboto', sans-serif;
+}
+
+.post-form textarea::placeholder {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    color: #999;
+    font-weight: normal;
 }
 
 .post-form button {
@@ -238,6 +247,7 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 25%;
+    height: max-content;
 }
 
 .suggestions h3 {
@@ -261,8 +271,8 @@ main {
 .suggestions li img {
     border-radius: 50%;
     margin-right: 10px;
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
     object-fit: cover;
 }
 
@@ -316,7 +326,7 @@ footer {
     padding: 20px;
     background-color: #ffffff;
     margin-top: 20px;
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: -webkit-fill-available;
 }

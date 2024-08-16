@@ -46,8 +46,8 @@
         </aside>
         
         <section class="feed">
-            <div class="post-form">
-                <textarea placeholder="What's on your mind?"></textarea>
+            <div class="post-form" data-user-id="{{ user.id }}">
+                <textarea name="content" placeholder="What's on your mind?"></textarea>
                 <button>Post</button>
             </div>
             

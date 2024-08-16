@@ -1,6 +1,14 @@
 const $ = window.$;
 $(document).ready(function() {
 
+    // Function that formats the date to: "MMM D, h:mm a"
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        return `${formattedDate} ${date.getHours() >= 12 ? 'pm' : 'am'}`;
+    }
+
     const userId = $('.stats').data('user-id');
 
     // Profile Card section ************************************************
@@ -42,6 +50,84 @@ $(document).ready(function() {
             });
             $('#following-count').append(totalFollowing);
         }
+    });
+
+
+    // Feed Section **********************************************************
+
+    // Create Post
+    $('.post-form button').on('click', function(event) {
+        event.preventDefault();
+
+        const content = $('textarea[name="content"]').val();
+        const userId = $('.post-form').data('user-id');
+        const title = "Feed Title"; // Random static title for now
+
+        const postData = {
+            title: title,
+            content: content
+        };
+
+        console.log('Sending data:', postData);
+
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${userId}/posts`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success: function(postResponse) {
+                console.log('Post created successfully!', postResponse);
+
+                // Extract user_id from response
+                const postUserId = postResponse.user_id;
+
+                // Fetch the user with the id to get their info
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${postUserId}`,
+                    type: 'GET',
+                    success: function(userResponse) {
+                        const formattedDate = formatDate(postResponse.created_at);
+
+                        // Create a new post element
+                        const newPost = `
+                            <article class="post">
+                                <header>
+                                    <img src="../static/images/4.jpg" alt="User Avatar">
+                                    <div class="user-info">
+                                        <h3>${userResponse.name}</h3>
+                                        <h5>${formattedDate}</h5>
+                                    </div>
+                                </header>
+                                <h2 class="post-title">${postResponse.title}</h2>
+                                <p class="text-content">${postResponse.content}</p>
+                                <div class="likes-counter">
+                                    <img class="like-symbol" src="../static/images/like_symbol.png">
+                                    <span>0 Likes</span>
+                                </div>
+                                <div class="post-buttons">
+                                    <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                                    <button>Like</button>
+                                    <img class="comment-symbol" src="../static/images/comment-symbol.png">
+                                    <button>Comment</button>
+                                </div>
+                            </article>
+                        `;
+
+                        // Prepend the new post to the feed
+                        $('.feed').children().first().after(newPost);
+
+                        // Clear the textarea
+                        $('textarea[name="content"]').val('');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to fetch user details.', xhr.responseText);
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to create post.', xhr.responseText);
+            }
+        });
     });
 
 
