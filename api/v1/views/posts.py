@@ -38,6 +38,10 @@ def get_posts_of_user(user_id):
         likes_no = len(post.likes)
         post_dict = post.to_dict()
         post_dict['likes_no'] = likes_no
+
+        # Convert 'likes' to a list of serializable data (IDs)
+        post_dict['likes'] = [like.id for like in post.likes]
+
         posts.append(post_dict)
     
     return jsonify(posts)
