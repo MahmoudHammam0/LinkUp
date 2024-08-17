@@ -11,7 +11,7 @@ body {
 /* Header styles */
 header {
   background-color: #ffffff;
-  padding: 10px 150px;
+  /*padding: 10px 150px;*/
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -50,6 +50,35 @@ nav ul li a {
   font-size: 14px;
   font-weight: 600;
 }
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(1.8);
+}
+
+.nav-icon.active{
+  filter: brightness(2.2);
+}
+
+#profile-icon {
+  filter: brightness(1.9);
+  filter: sepia(9.4) hue-rotate(249deg) saturate(6.5);
+}
+
+#message-icon {
+  filter: contrast(56%);
+}
+
+#logout-icon {
+  filter: contrast(113%);
+}
+
+
+
+
+
+
 
 .container {
     width: 90%;

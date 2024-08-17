@@ -18,10 +18,33 @@
             </div>
             <input type="text" placeholder="Search...">
             <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('profile', user_id=user.id) }}">Profile</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                <!--Feed-->
+                <li>
+                    <a href="#">
+                        <img class="nav-icon" src="../static/images/home-icon.png">
+                    </a>
+                </li>
+                
+                <!--Profile-->
+                <li>
+                    <a href="{{ url_for('profile', user_id=user.id) }}">
+                        <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
+                    </a>
+                </li>
+                
+                <!--Messages-->
+                <li>
+                    <a href="#">
+                        <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
+                    </a>
+                </li>
+                
+                <!--Logout-->
+                <li>
+                    <a href="#">
+                        <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png">
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>

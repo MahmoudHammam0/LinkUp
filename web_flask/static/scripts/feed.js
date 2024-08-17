@@ -240,14 +240,14 @@ $(document).ready(function() {
                 followButton.removeClass('follow-button').addClass('unfollow-button').text('Following')
     
                 $.ajax({
-                    url: `http://localhost:5001/api/v1/users/${userId}/followers`,
+                    url: `http://localhost:5001/api/v1/users/${userId}/following`,
                     type: 'GET',
                     success: function (response) {
-                        let totalFollowers = 0;
+                        let totalFollowing= 0;
                         response.forEach(function (post) {
-                            totalFollowers++;
+                            totalFollowing++;
                         });
-                        $('#following-count').text(`Following: ${totalFollowers}`);
+                        $('#following-count').text(`Following: ${totalFollowing}`);
                     }
                 });
             },
