@@ -307,6 +307,16 @@ main {
     margin-top: -6px;
 }
 
+.post-photo {
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.post-photo img {
+    width: 100%;
+    border-radius: 20px;
+}
+
 .post .text-content {
     padding: 10px;
 }

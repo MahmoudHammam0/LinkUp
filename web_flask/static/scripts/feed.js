@@ -61,25 +61,28 @@ $(document).ready(function() {
 
         const content = $('textarea[name="content"]').val();
         const userId = $('.post-form').data('user-id');
-        const title = "Feed Title"; // Random static title for now
+        const photo = $('#file-upload')[0].files[0];
 
         if (!content.trim()) {
             $('.error-message').text('Did you forget to write something?').show().delay(3000).fadeOut();
             return;
         }
 
-        const postData = {
-            title: title,
-            content: content
-        };
+        const formData = new FormData();
+        formData.append('content', content);
 
-        console.log('Sending data:', postData);
+        if (photo) {
+            formData.append('photo', photo);
+        }
+
+        console.log('Sending data:', formData);
 
         $.ajax({
             url: `http://localhost:5001/api/v1/users/${userId}/posts`,
             type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(postData),
+            processData: false,
+            contentType: false,
+            data: formData,
             success: function(postResponse) {
                 console.log('Post created successfully!', postResponse);
 
@@ -103,8 +106,8 @@ $(document).ready(function() {
                                         <h5>${formattedDate}</h5>
                                     </div>
                                 </header>
-                                <h2 class="post-title">${postResponse.title}</h2>
                                 <p class="text-content">${postResponse.content}</p>
+                                ${postResponse.picture ? `<div class="post-photo"><img src="${postResponse.picture}" alt="Post Image"></div>` : ''}
                                 <div class="likes-counter">
                                     <img class="like-symbol" src="../static/images/like_symbol.png">
                                     <span>0 Likes</span>

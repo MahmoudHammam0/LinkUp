@@ -5,6 +5,11 @@ from models.user import User
 from flask import jsonify, abort, request
 from models import storage
 from api.v1.views import app_views
+from werkzeug.utils import secure_filename
+import os
+
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'uploads')
 
 
 @app_views.route("/posts", methods=["GET"])
@@ -49,21 +54,32 @@ def get_posts_of_user(user_id):
 
 @app_views.route("users/<user_id>/posts", methods=["POST"])
 def create_post(user_id):
-    "creates a new post for a user"
     user = storage.get(User, user_id)
     if not user:
         abort(404)
     
-    post_data = request.get_json()
-    if not post_data:
-        abort(400, "Not A Vaild Json")
+    content = request.form.get('content')
+
+    if not content:
+        abort(400, "Missing Content")
+
+    photo_url = None
+    if 'photo' in request.files:
+        photo = request.files.get('photo')
+        if photo and photo.filename:
+            file_name = secure_filename(photo.filename)
+            photo_path = os.path.join(UPLOAD_FOLDER, file_name)
+            photo.save(photo_path)
+            photo_url = f'../static/uploads/{file_name}'
+
+    post_data = {
+        'content': content,
+        'user_id': user_id,
+    }
     
-    data = ["title", "content"]
-    for info in data:
-        if info not in post_data:
-            abort(400, f"Missing {info.capitalize()}")
-    
-    post_data['user_id'] = user_id
+    if photo_url:
+        post_data['picture'] = photo_url
+
     new_post = Post(**post_data)
     new_post.save()
 
