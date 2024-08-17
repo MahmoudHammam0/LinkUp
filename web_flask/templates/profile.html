@@ -42,11 +42,33 @@
         </div>
         <div class="profile-details">
           <h1>{{ user.name }}</h1>
-          <p>{{ user.username }}</p>
+          <p>@{{ user.username }}</p>
         </div>
         <div class="profile-buttons">
+          {% if current_user.id != user.id %}
             <button>Follow</button>
             <button>Message</button>
+          {% else %}
+          <div id="edit-profile">
+            <img src="../static/images/edit-button.png">
+            <h6>Edit profile</h6>
+          </div>
+          {% endif %}
+          <div id="overlay" class="overlay">
+            <div class="form-container">
+              <div class="edit-header">
+                <h2>Edit profile</h2>
+                <div id="closeFormBtn" class="close-btn">X</div>
+              </div>
+              <div class="edit-info">
+                <h4>Bio</h4>
+                <h4>Education</h4>
+                <h4>Work</h4>
+                <h4>Location</h4>
+                <h4>Phone</h4>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -61,162 +83,6 @@
         </div>
       </div>
       <div class="posts">
-        {% for post in user.posts %}
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>{{ user.name }}</h3>
-              <p>{{ post.created_at }}</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">{{ post.content }}</p>
-            <div class="post-image">
-              <img src="../static/images/1.jpg" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-        {% endfor %}
-        
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="../static/images/logo.png" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="../static/images/logo.png" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-        
-        <div class="post-item">
-          <div class="post-header">
-            <div class="pic">
-              <img src="../static/images/1.jpg" alt="Profile Picture" />
-            </div>
-            <div class="details">
-              <h3>Some User</h3>
-              <p>Sunday 29 at 4:15pm</p>
-            </div>
-          </div>
-          <div class="post-content">
-            <p class="content-text">another post</p>
-            <div class="post-image">
-              <img src="" alt="post picture" />
-            </div>
-          </div>
-          <div class="post-buttons">
-            <button>Like</button>
-            <button>Comment</button>
-          </div>
-        </div>
-
       </div>
     </div>
     <div class="footer">
