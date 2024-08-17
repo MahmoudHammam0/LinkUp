@@ -31,9 +31,9 @@ body::before {
 
 /* Header styles */
 header {
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     padding: 10px 150px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    /*box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
 }
 
 .nav-icon {
@@ -61,7 +61,7 @@ header {
 
 .logo img {
     width: 24px;
-    margin-left: 155px;
+    margin-left: 100px;
 }
 
 nav {
@@ -71,11 +71,13 @@ nav {
 }
 
 nav input {
-    padding: 5px 10px;
+    padding: 5px 15px;
     border-radius: 20px;
     border: 1px solid #b1b1b157;
-    width: 300px;
-    background-color: #d9c0de21;
+    width: 400px;
+    background-color: white;
+    height: 35px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
