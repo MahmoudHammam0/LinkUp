@@ -1,7 +1,4 @@
 $(document).ready(function() {
-    let isValid = false;
-    let emailValid = true;
-    let passwordValid = true;
 
     $(document).on('click', '.reg', function() {
         $('.reg').prop('disabled', true);

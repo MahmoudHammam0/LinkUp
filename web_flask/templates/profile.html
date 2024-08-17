@@ -3,19 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Profile</title>
+  <title>Link Up</title>
   <link rel="icon" href="../static/images/logo.png" />
   <link rel="stylesheet" href="../static/styles/profile.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../static/scripts/profile.js"></script>
 </head>
-<body>
+  <body>
+    <header>
+      <nav>
+          <div class="logo">
+              <img src="../static/images/logo_cut.png">
+          </div>
+          <input type="text" placeholder="Search...">
+          <ul>
+              <li><a href="{{ url_for('home') }}">Home</a></li>
+              <li><a href="{{ url_for('profile', user_id=user.id) }}">Profile</a></li>
+              <li><a href="#">Messages</a></li>
+              <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          </ul>
+      </nav>
+  </header>
   <div class="container">
-    <div class="profile-header">
+    <div class="profile-header" data-id="{{ user.id }}">
       <div class="cover-photo">
-        <img src="../static/images/1.jpg" alt="Profile Picture" />
+        <div id="edit-cover">
+          <img src="../static/images/camera.png">
+          <h6>Edit cover photo</h6>
+          <input type="file" id="cover-update" accept="image/*">
+        </div>
+        <img src="{{ user.cover_photo }}" alt="Profile Picture" />
       </div>
       <div class="profile-info">
         <div class="profile-pic">
-          <img src="../static/images/2.jpg" alt="Profile Picture" />
+          <img src="{{ user.profile_photo }}" alt="Profile Picture" />
+          <div id="edit-photo"><img src="../static/images/camera.png"></div>
+          <input type="file" id="photo-update" accept="image/*">
         </div>
         <div class="profile-details">
           <h1>{{ user.name }}</h1>

@@ -18,8 +18,8 @@
             </div>
             <input type="text" placeholder="Search...">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Profile</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('profile', user_id=user.id) }}">Profile</a></li>
                 <li><a href="#">Messages</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             </ul>

@@ -23,7 +23,8 @@ class User(BaseModel, Base, UserMixin):
     name = Column(String(128), nullable=False)
     email = Column(String(128), unique=True, nullable=False)
     password_hash = Column(LargeBinary, nullable=False)
-    picture = Column(String(1000), nullable=True)
+    profile_photo = Column(String(1000), nullable=True, default="../static/images/avatar.png")
+    cover_photo = Column(String(1000), nullable=True, default="../static/images/cover.png")
 
     # Many-to-many relationship for followers
     # followers: You access a list of users who follow a given user

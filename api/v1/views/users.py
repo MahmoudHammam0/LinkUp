@@ -4,6 +4,11 @@ from models.user import User
 from flask import jsonify, abort, request
 from models import storage
 from api.v1.views import app_views
+from werkzeug.utils import secure_filename
+import os
+
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'images')
 
 
 @app_views.route("/users", methods=["GET"])
@@ -62,18 +67,40 @@ def delete_user(user_id):
 
 @app_views.route("/users/<user_id>", methods=["PUT"])
 def edit_user(user_id):
-    "edit the user info"
+    "Edit the user info"
     user = storage.get(User, user_id)
     if not user:
-        abort(404)
+        abort(404, description="User not found")
+
+    if 'cover' in request.files:
+        cover = request.files['cover']
+        if cover:
+            file_name = secure_filename(cover.filename)
+            cover_path = os.path.join(UPLOAD_FOLDER, file_name)
+            cover.save(cover_path)
+            setattr(user, 'cover_photo', f'../static/images/{file_name}')
+            user.save()
+            return jsonify(user.to_dict())
+        else:
+            abort(400, description="Invalid cover file")
+
+    if 'photo' in request.files:
+        photo = request.files['photo']
+        if photo:
+            file_name = secure_filename(photo.filename)
+            photo_path = os.path.join(UPLOAD_FOLDER, file_name)
+            photo.save(photo_path)
+            setattr(user, 'profile_photo', f'../static/images/{file_name}')
+            user.save()
+            return jsonify(user.to_dict())
+        else:
+            abort(400, description="Invalid photo file")
 
     user_data = request.get_json()
-    if not user_data:
-        abort(400, "Not A Valid Json")
-
-    for key, val in user_data.items():
-        if key not in ['id', 'created_at', 'updated_at']:
-            setattr(user, key, val)
+    if user_data:
+        for key, val in user_data.items():
+            if key not in ['id', 'created_at', 'updated_at']:
+                setattr(user, key, val)
 
     user.save()
     return jsonify(user.to_dict())
