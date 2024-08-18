@@ -4,9 +4,14 @@ $(document).ready(function() {
     // Function that formats the date to: "MMM D, h:mm a"
     function formatDate(dateString) {
         const date = new Date(dateString);
-        const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        return `${formattedDate} ${date.getHours() >= 12 ? 'pm' : 'am'}`;
+        const options = { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true
+        };
+        return date.toLocaleDateString('en-US', options);
     }
 
     const userId = $('.stats').data('user-id');
@@ -176,6 +181,47 @@ $(document).ready(function() {
         } else {
             // Clear the preview if no file is selected
             $('.image-preview').html('');
+        }
+    });
+
+
+    // Populate the feed with posts from followed users
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}/following/posts`,
+        type: 'GET',
+        success: function(postsResponse) {
+            let postsHTML = '';
+            postsResponse.forEach(function(post) {
+                postsHTML += `
+                    <article class="post">
+                        <header>
+                            <img src="../static/images/4.jpg" alt="User Avatar">
+                            <div class="user-info">
+                                <h3>${post.user_name}</h3>
+                                <h5>${formatDate(post.created_at)}</h5>
+                            </div>
+                        </header>
+                        <p class="text-content">${post.content}</p>
+                        ${post.picture ? `<div class="post-photo"><img src="${post.picture}" alt="Post Image"></div>` : ''}
+                        <div class="likes-counter">
+                            <img class="like-symbol" src="../static/images/like_symbol.png">
+                            <span>${post.likes_no} Likes</span>
+                        </div>
+                        <div class="post-buttons">
+                            <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                            <button>Like</button>
+                            <img class="comment-symbol" src="../static/images/comment-symbol.png">
+                            <button>Comment</button>
+                        </div>
+                    </article>
+                `;
+            });
+
+            // Append posts to the feed
+            $('.feed').append(postsHTML);
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to fetch posts:', xhr.responseText);
         }
     });
 

@@ -44,6 +44,7 @@ def get_posts_of_user(user_id):
         likes_no = len(post.likes)
         post_dict = post.to_dict()
         post_dict['likes_no'] = likes_no
+        post_dict['user_name'] = user.name
 
         # Convert 'likes' to a list of serializable data (IDs)
         post_dict['likes'] = [like.id for like in post.likes]
@@ -117,3 +118,25 @@ def update_post(post_id):
 
     post.save()
     return jsonify(post.to_dict())
+
+
+@app_views.route("/users/<user_id>/following/posts", methods=["GET"])
+def get_posts_of_following(user_id):
+    """return posts of all the users that the current user is following"""
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+
+    # Initialize a list to hold all posts
+    all_posts = []
+
+    # Collect posts from each followed user
+    for followed_user in user.following:
+        # Fetch posts for each followed user
+        followed_user_posts = get_posts_of_user(followed_user.id).json
+        all_posts.extend(followed_user_posts)
+
+    # Sort posts by creation date in descending order
+    all_posts.sort(key=lambda x: x['created_at'], reverse=True)
+
+    return jsonify(all_posts)
