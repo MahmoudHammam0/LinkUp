@@ -246,6 +246,57 @@ nav ul li a {
   overflow: hidden;
 }
 
+.comment-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 15px 15px 15px 25px;
+  border-top: 1px solid #e2dede;
+}
+
+.comment-div .pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-right: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.comment-div input[type="text"] {
+  border-radius: 20px;
+  border: none;
+  background-color: #ddd;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.comment-div input[type="submit"] {
+  border: none;
+  background-color: #0056b3;
+  color: #fff;
+  font-size: 24px;
+  border-radius: 35%;
+  cursor: pointer;
+}
+
+.comment-div form {
+  flex: 1;
+}
+
+.comment-div .input-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.comment-div input:focus {
+  outline: none;
+}
+
 .post-header h3 {
   margin-top: 5px;
   margin-bottom: 2px;
@@ -259,20 +310,18 @@ nav ul li a {
 }
 
 .post-content {
-  border-radius: 20px;
-  margin: 85px 0 48px 0;
+  margin: 85px 0 15px 0;
   flex: 1;
-  padding: 15px;
   overflow: hidden;
 }
 
 .content-text {
-  margin: 0 0 15px 15px;
+  padding: 15px;
+  margin: 0 15px;
 }
 
 .post-image {
   margin: 0;
-  border-radius: 20px;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -281,7 +330,6 @@ nav ul li a {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 5px;
 }
 
 .info {
@@ -391,6 +439,7 @@ h6 {
   background: white;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 700px;
 }
 
 .close-btn {
@@ -410,7 +459,6 @@ h6 {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 700px;
   text-align: center;
   border-bottom: 1px solid #ddd;
   padding: 15px;
@@ -429,7 +477,7 @@ h6 {
   color: #333;
   margin-bottom: 10px;
   display: flex;
-  margin-left: 10px;
+  margin-left: 30px;
 }
 
 .likes-counter span {
@@ -449,7 +497,7 @@ h6 {
   border-top: 1px solid #e2dede;
   display: flex;
   align-items: center;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 
 .post-buttons .thumbsup-symbol {

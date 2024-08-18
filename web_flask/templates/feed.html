@@ -27,7 +27,7 @@
                 
                 <!--Profile-->
                 <li>
-                    <a href="{{ url_for('profile', user_id=user.id) }}">
+                    <a href="{{ url_for('profile', user_id=current_user.id) }}">
                         <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
                     </a>
                 </li>
@@ -41,7 +41,7 @@
                 
                 <!--Logout-->
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('logout') }}">
                         <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png">
                     </a>
                 </li>

@@ -42,7 +42,7 @@
               
               <!--Logout-->
               <li>
-                  <a href="#">
+                  <a href="{{ url_for('logout') }}">
                       <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png">
                   </a>
               </li>
@@ -85,17 +85,6 @@
           {% endif %}
           <div id="overlay" class="overlay">
             <div class="form-container">
-              <div class="edit-header">
-                <h2>Edit profile</h2>
-                <div id="closeFormBtn" class="close-btn">X</div>
-              </div>
-              <div class="edit-info">
-                <h4>Bio</h4>
-                <h4>Education</h4>
-                <h4>Work</h4>
-                <h4>Location</h4>
-                <h4>Phone</h4>
-              </div>
             </div>
           </div>
         </div>

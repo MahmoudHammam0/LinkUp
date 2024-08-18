@@ -7,6 +7,7 @@ from models import storage
 from api.v1.views import app_views
 from werkzeug.utils import secure_filename
 import os
+from datetime import datetime
 
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'uploads')
@@ -48,7 +49,8 @@ def get_posts_of_user(user_id):
         post_dict['likes'] = [like.id for like in post.likes]
 
         posts.append(post_dict)
-    
+        
+    posts.sort(key=lambda x: x['created_at'], reverse=True)
     return jsonify(posts)
 
 

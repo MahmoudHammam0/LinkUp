@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import os
 
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'images')
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'uploads')
 
 
 @app_views.route("/users", methods=["GET"])
@@ -78,7 +78,7 @@ def edit_user(user_id):
             file_name = secure_filename(cover.filename)
             cover_path = os.path.join(UPLOAD_FOLDER, file_name)
             cover.save(cover_path)
-            setattr(user, 'cover_photo', f'../static/images/{file_name}')
+            setattr(user, 'cover_photo', f'../static/uploads/{file_name}')
             user.save()
             return jsonify(user.to_dict())
         else:
@@ -90,7 +90,7 @@ def edit_user(user_id):
             file_name = secure_filename(photo.filename)
             photo_path = os.path.join(UPLOAD_FOLDER, file_name)
             photo.save(photo_path)
-            setattr(user, 'profile_photo', f'../static/images/{file_name}')
+            setattr(user, 'profile_photo', f'../static/uploads/{file_name}')
             user.save()
             return jsonify(user.to_dict())
         else:
@@ -115,7 +115,9 @@ def get_followers_of_user(user_id):
     
     followers = []
     for follower in user.followers:
-        followers.append(follower.to_dict())
+        follower_dict = follower.to_dict()
+        follower_dict['followers'] = [follower.id for follower in follower.followers]
+        followers.append(follower_dict)
     
     return jsonify(followers)
 
@@ -129,7 +131,9 @@ def get_following_of_user(user_id):
     
     following = []
     for account in user.following:
-        following.append(account.to_dict())
+        account_dict = account.to_dict()
+        account_dict['following'] = [account.id for account in account.following]
+        following.append(account_dict)
     
     return jsonify(following)
 
