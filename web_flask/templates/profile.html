@@ -53,21 +53,25 @@
 
 
 
-  <div class="container">
+  <div class="container" data-id="{{ current_user.id }}">
     <div class="profile-header" data-id="{{ user.id }}">
       <div class="cover-photo">
+      {% if current_user.id == user.id %}
         <div id="edit-cover">
           <img src="../static/images/camera.png">
           <h6>Edit cover photo</h6>
           <input type="file" id="cover-update" accept="image/*">
         </div>
+      {% endif %}
         <img src="{{ user.cover_photo }}" alt="Profile Picture" />
       </div>
       <div class="profile-info">
         <div class="profile-pic">
           <img src="{{ user.profile_photo }}" alt="Profile Picture" />
+        {% if current_user.id == user.id %}
           <div id="edit-photo"><img src="../static/images/camera.png"></div>
           <input type="file" id="photo-update" accept="image/*">
+        {% endif %}
         </div>
         <div class="profile-details">
           <h1>{{ user.name }}</h1>

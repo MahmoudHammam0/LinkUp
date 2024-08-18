@@ -2,6 +2,7 @@
 "Comments API views"
 from models.comment import Comment
 from models.post import Post
+from models.user import User
 from flask import jsonify, abort, request
 from models import storage
 from api.v1.views import app_views
@@ -82,7 +83,12 @@ def get_comments_for_post(post_id):
     comments = []
     if post:
         for comment in post.comments:
-            comments.append(comment.to_dict())
+            user = storage.get(User, comment.user_id)
+            comment_dict = comment.to_dict()
+            comment_dict['User'] = user.to_dict()
+            comments.append(comment_dict)
+
+        comments.sort(key=lambda x: x['created_at'], reverse=True)
         return jsonify(comments)
     else:
         abort(404)

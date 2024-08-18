@@ -1,6 +1,8 @@
 $(document).ready(function() {
     const userId = $('.profile-header').data('id');
+    const currentUserId = $('.container').data('id');
     let userObject = '';
+    let currentUserObject = ''
 
     function formateDate(date) {
         const currntYear = new Date().getFullYear();
@@ -78,25 +80,36 @@ $(document).ready(function() {
     const openFormBtn = document.getElementById('edit-profile');
     const overlay = document.getElementById('overlay');
 
-    openFormBtn.addEventListener('click', () => {
-        overlay.style.display = 'flex';
-        $('.form-container').html(`
-            <div class="edit-header">
-                <h2>Edit profile</h2>
-                <div id="closeFormBtn" class="close-btn">X</div>
-            </div>
-            <div class="edit-info">
-                <h4>Bio</h4>
-                <h4>Education</h4>
-                <h4>Work</h4>
-                <h4>Location</h4>
-                <h4>Phone</h4>
-            </div>`
-        );
-
-        $('#closeFormBtn').on('click', () => {
-            overlay.style.display = 'none';
+    if (openFormBtn && overlay) {
+        openFormBtn.addEventListener('click', () => {
+            overlay.style.display = 'flex';
+            $('.form-container').html(`
+                <div class="edit-header">
+                    <h2>Edit profile</h2>
+                    <div id="closeFormBtn" class="close-btn">X</div>
+                </div>
+                <div class="edit-info">
+                    <h4>Bio</h4>
+                    <h4>Education</h4>
+                    <h4>Work</h4>
+                    <h4>Location</h4>
+                    <h4>Phone</h4>
+                </div>`
+            );
+    
+            $('#closeFormBtn').on('click', () => {
+                overlay.style.display = 'none';
+            });
         });
+    }
+
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${currentUserId}`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            currentUserObject = res;
+        }
     });
 
     $.ajax({
@@ -164,11 +177,11 @@ $(document).ready(function() {
     
         if (postItem.find('input').length === 0) {
             postItem.append(`
+                <div class="prev-comments">
+                </div>
                 <div class="comment-div">
-                    <div class="prev-comments">
-                    </div>
                     <div class="pic">
-                        <img src=${userObject.profile_photo} alt="Profile Picture" />
+                        <img src="${currentUserObject.profile_photo}" alt="Profile Picture" />
                     </div>
                     <form id="comment-form">
                         <div class="input-container">
@@ -182,6 +195,7 @@ $(document).ready(function() {
 
         const commentSection = postItem.find('.prev-comments');
         const postId = postItem.data('id');
+        let commentSectionContent = ''
         console.log(postId)
         $.ajax({
             url: `http://localhost:5001/api/v1/posts/${postId}/comments`,
@@ -189,13 +203,22 @@ $(document).ready(function() {
             dataType: "json",
             success: function(res) {
                 res.forEach((comment) => {
-                    commentSection.append(`
+                    console.log(comment);
+                    commentSectionContent += `
+                    <div class="post-comments">
+                        <div class="pic">
+                            <img src=${comment.User.profile_photo} alt="Profile Picture" />
+                        </div>
                         <div class="comment-item">
+                            <div class="comment-writer">
+                                ${comment.User.name}
+                            </div>
                             ${comment.content}
                         </div>
-                        `
-                    );
+                    </div>`;
                 });
+
+                commentSection.html(commentSectionContent);
             }
         });
     });
@@ -204,29 +227,55 @@ $(document).ready(function() {
         event.preventDefault();
     
         const postItem = $(this).closest('.post-item');
+        const commentSection = postItem.find('.prev-comments');
+        const commentContent = postItem.find('.comment-content').val();
         const postId = postItem.data('id');
     
         const requestData = {
-            user_id: userObject.id,
+            user_id: currentUserObject.id,
             post_id: postId,
-            content: postItem.find('.comment-content').val()
+            content: commentContent
         };
     
-        $.ajax({
-            url: 'http://localhost:5001/api/v1/comments',
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(requestData),
-            success: function(res) {
-                console.log("comment created successfully", res);
-                // const commentSection = postItem.find('.prev-comments');
-
-                // commentSection.append(`${res.content}`);
-            },
-            error: function(err) {
-                console.error("Error creating comment", err);
-            }
-        });
+        if (commentContent !== '') {
+            $.ajax({
+                url: 'http://localhost:5001/api/v1/comments',
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: function(res) {
+                    console.log("comment created successfully", res);
+                    let commentSectionContent = ''
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/posts/${postId}/comments`,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(res) {
+                            res.forEach((comment) => {
+                                commentSectionContent += `
+                                <div class="post-comments">
+                                    <div class="pic">
+                                        <img src=${comment.User.profile_photo}>
+                                    </div>
+                                    <div class="comment-item">
+                                        <div class="comment-writer">
+                                            ${comment.User.name}
+                                        </div>
+                                        ${comment.content}
+                                    </div>
+                                </div>`;
+                            });
+    
+                            $('.comment-content').val('');
+                            commentSection.html(commentSectionContent);
+                        }
+                    });
+                },
+                error: function(err) {
+                    console.error("Error creating comment", err);
+                }
+            });
+        }
     });
 
     // $('.cover-photo').on('click', function() {

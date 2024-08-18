@@ -55,7 +55,6 @@ $(document).ready(function() {
 
     $(document).on('submit', '.login-form', function(event) {
         event.preventDefault();
-        $('input[type="submit"]').prop('disabled', true);
 
         const requestData = {
             email: $('#email').val(),
