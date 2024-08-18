@@ -52,7 +52,7 @@ header {
 }
 
 #message-icon {
-    filter: contrast(56%);
+    filter: contrast(43%);
 }
 
 #logout-icon {
@@ -122,9 +122,12 @@ main {
     flex-direction: column;
     align-items: center;
     height: max-content;
+    position: sticky;
+    top: 20px;
+    z-index: 1;
 }
 
-.profile-card img {
+.profile-card .profile-photo {
     border-radius: 50%;
     margin-bottom: 10px;
     width: 100px;
@@ -155,11 +158,58 @@ main {
     font-size: 13.9px;
 }
 
+
+
+.scroll-nav {
+    transition: opacity 0.3s ease-in-out;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 11px;
+    padding-top: 15px;
+}
+
+.scroll-nav a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.scroll-nav img {
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+}
+
+
+.scroll-nav h2 {
+    font-weight: 400;
+    font-size: 13px;
+    margin: 0;
+    width: fit-content;
+    margin-bottom: 5px;
+    color: #5b195f;
+}
+
+.scroll-nav {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.scroll-nav.visible {
+    opacity: 1; /* Show when scrolled */
+}
+
+
+
+
 /* Feed styles */
 .feed {
     flex-grow: 1;
     margin: 0 20px;
     min-height: 617px;
+    width: 55%;
 }
 
 .post-form {
@@ -260,6 +310,10 @@ main {
     font-weight: 400;
 }
 
+.upload-section h5:hover {
+    color: #898989;
+}
+
 .post-form.typing {
     /*
     transition: background-color 0.3s ease-in;
@@ -278,12 +332,23 @@ main {
     margin-left: 10px;
 }
 
+
+
+
+
+
+
+
+
+
+
 .post {
     background-color: #ffffff;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
     border-radius: 20px;
+    padding-bottom: 10px;
 }
 
 .post header {
@@ -297,16 +362,21 @@ main {
 .post header img {
     border-radius: 50%;
     margin-right: 10px;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     object-fit: cover;
+}
+
+.post .user-info h3 {
+    font-weight: 400;
+    font-size: 17px;
 }
 
 .post .user-info h5 {
     font-size: 13px;
     color: darkgrey;
     font-weight: 400;
-    margin-top: -6px;
+    margin-top: -5px;
 }
 
 .post-photo {
@@ -317,12 +387,18 @@ main {
 .post-photo img {
     border-radius: 20px;
     object-fit: cover;
-    width: 610px;
+    width: 626px;
     max-height: 400px;
+    margin-bottom: 10px;
 }
 
 .post .text-content {
-    padding: 10px;
+    padding: 8px 0px 18px;
+    white-space: pre-wrap;
+    font-weight: 400;
+    /*line-height: 0.7;*/
+    font-size: 14px;
+    color: #000000cf;
 }
 
 .likes-counter {
@@ -336,6 +412,7 @@ main {
     display: block;
     color: darkgrey;
     font-weight: 400;
+    font-size: 13px;
 }
 
 .likes-counter .like-symbol {
@@ -346,9 +423,10 @@ main {
 }
 
 .post .post-buttons {
-    border-top: 1px solid #e2dede;
+    border-top: 1px solid #efecf3;
     display: flex;
     align-items: center;
+    height: 39px;
 }
 
 .thumbsup-symbol {
@@ -361,17 +439,34 @@ main {
 .comment-symbol {
     width: 20px;
     height: 20px;
-    margin-top: 10px;
-    margin-right: 6px;
+    margin-top: 18px;
+    margin-right: 8px;
     cursor: pointer;
     filter: invert(48%) sepia(0%) saturate(3242%) hue-rotate(130deg) brightness(86%) contrast(114%);
 }
 
-.post .post-buttons button {
+
+.like-group, .comment-group {
+    display: flex;
+}
+
+.like-group:hover .thumbsup-symbol,
+.like-group:hover #like {
+    filter: sepia(14.4) hue-rotate(200deg) saturate(4.5);
+    background-color: transparent;
+}
+
+.comment-group:hover .comment-symbol,
+.comment-group:hover #comment {
+    filter: sepia(14.4) hue-rotate(424deg) saturate(2.8);
+    background-color: transparent;
+}
+
+.post .post-buttons h5 {
     background-color: white;
     color: grey;
     border: none;
-    padding: 8px 5px;
+    padding: 8px 5px 8px 0px;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;

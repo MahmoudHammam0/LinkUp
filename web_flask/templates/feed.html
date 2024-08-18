@@ -51,8 +51,12 @@
     <!-- end of Header -->
     
     <main>
+        <script>
+            var profileUrl = "{{ url_for('profile', user_id=current_user.id) }}";
+        </script>
+        
         <aside class="profile-card">
-            <img src="../static/images/1.jpg" alt="Profile Picture">
+            <img class="profile-photo" src="../static/images/1.jpg" alt="Profile Picture">
             <h2>{{ user.name }}</h2>
             <p>Web Developer</p>
             <div class="stats" data-user-id="{{ user.id }}">
@@ -66,6 +70,8 @@
                     <h2 id="following-count">Following: </h2>
                 </div>
             </div>
+
+            
         </aside>
         
         <section class="feed">
@@ -89,26 +95,7 @@
                 </div>
             </div>
             
-            <article class="post">
-                <header>
-                    <img src="../static/images/4.jpg" alt="User Avatar">
-                    <div class="user-info">
-                        <h3>Some User</h3>
-                        <h5>2 hours ago</h5>
-                    </div>
-                </header>
-                <p class="text-content">Just finished a great project! #coding #webdev</p>
-                <div class="likes-counter">
-                    <img class="like-symbol" src="../static/images/like_symbol.png">
-                    <span>123 Likes</span>
-                </div>
-                <div class="post-buttons">
-                    <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
-                    <button>Like</button>
-                    <img class="comment-symbol" src="../static/images/comment-symbol.png">
-                    <button>Comment</button>
-                </div>
-            </article>
+            <!-- Where posts would be -->
             
         </section>
         

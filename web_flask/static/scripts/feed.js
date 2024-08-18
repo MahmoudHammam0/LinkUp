@@ -57,6 +57,45 @@ $(document).ready(function() {
         }
     });
 
+    // Scroll Nav section
+    $(window).on('scroll', function() {
+        const scrollNavHTML = `
+            <div class="scroll-nav">
+                    <a href="#">
+                        <img class="nav-icon" src="../static/images/home-icon.png" alt="Feed Icon">
+                        <h2>Home</h2>
+                    </a>
+
+                    <a href="${profileUrl}">
+                        <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png" alt="Profile Icon">
+                        <h2>Profile</h2>
+                    </a>
+
+                    <a href="#">
+                        <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png" alt="Messages Icon">
+                        <h2>Messages</h2>
+                    </a>
+
+                    <a href="#">
+                        <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png" alt="Logout Icon">
+                        <h2>Logout</h2>
+                    </a>
+                </div>
+        `;
+
+        console.log('Scrolled'); // Debugging line
+
+        if ($(window).scrollTop() > 100) { // Adjust this value as needed
+            if ($('.scroll-nav').length === 0) { // Only append if not already present
+                $('.profile-card').append(scrollNavHTML);
+            }
+        } else {
+            if ($('.scroll-nav').length > 0) { // Only remove if present
+                $('.scroll-nav').remove();
+            }
+        }
+    });
+
 
     // Feed Section **********************************************************
 
@@ -118,10 +157,14 @@ $(document).ready(function() {
                                     <span>0 Likes</span>
                                 </div>
                                 <div class="post-buttons">
-                                    <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
-                                    <button>Like</button>
-                                    <img class="comment-symbol" src="../static/images/comment-symbol.png">
-                                    <button>Comment</button>
+                                    <div class="like-group">
+                                        <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                                        <h5 id="like">Like</h5>
+                                    </div>
+                                    <div class="comment-group">
+                                        <img class="comment-symbol" src="../static/images/comment-symbol.png">
+                                        <h5 id="comment">Comment</h5>
+                                    </div>
                                 </div>
                             </article>
                         `;
@@ -208,10 +251,14 @@ $(document).ready(function() {
                             <span>${post.likes_no} Likes</span>
                         </div>
                         <div class="post-buttons">
-                            <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
-                            <button>Like</button>
-                            <img class="comment-symbol" src="../static/images/comment-symbol.png">
-                            <button>Comment</button>
+                            <div class="like-group">
+                                <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                                <h5 id="like">Like</h5>
+                            </div>
+                            <div class="comment-group">
+                                <img class="comment-symbol" src="../static/images/comment-symbol.png">
+                                <h5 id="comment">Comment</h5>
+                            </div>
                         </div>
                     </article>
                 `;
