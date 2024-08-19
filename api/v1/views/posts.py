@@ -2,6 +2,7 @@
 "Posts API views"
 from models.post import Post
 from models.user import User
+from models.like import Like
 from flask import jsonify, abort, request
 from models import storage
 from api.v1.views import app_views

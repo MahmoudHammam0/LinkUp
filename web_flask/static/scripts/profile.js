@@ -145,7 +145,7 @@ $(document).ready(function() {
                                     <span>${post.likes_no} Likes</span>
                                 </div>
                                 <div class="post-buttons">
-                                    <button>
+                                    <button class="likes">
                                         <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
                                         Like
                                     </button>
@@ -276,6 +276,26 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+    $('.posts').on('click', '.likes', function() {
+        const postItem = $(this).closest('.post-item');
+        const postId = postItem.data('id');
+        const requestData = {
+            user_id: currentUserId,
+            post_id: postId
+        };
+
+        $.ajax({
+            url: "http://localhost:5001/api/v1/posts/likes",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function(res) {
+                const likeCounter = postItem.find('.likes-counter span');
+                likeCounter.html(`${res.like_no} Likes`);
+            }
+        });
     });
 
     // $('.cover-photo').on('click', function() {
