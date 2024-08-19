@@ -287,7 +287,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: "http://localhost:5001/api/v1/posts/likes",
+            url: "http://localhost:5001/api/v1/likes",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(requestData),
