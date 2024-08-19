@@ -400,6 +400,120 @@ $(document).ready(function() {
     });
 
 
+    // Show post comments when you click on comment button
+    $('.feed').on('click', '.comment-group #comment', function() {
+        const postItem = $(this).closest('.post');
+
+        if (postItem.find('input').length === 0) {
+            postItem.append(`
+                <div class="prev-comments">
+                </div>
+                <div class="comment-div">
+                    <div class="pic">
+                        <img src="${currentUserObject.profile_photo}" alt="Profile Picture" />
+                    </div>
+                    <form id="comment-form">
+                        <div class="input-container">
+                            <input class="comment-content" type="text" placeholder="Write a comment...">
+                            <input type="submit" value="➜">
+                        </div>
+                    </form>
+                </div>`
+            );
+        }
+
+        const commentSection = postItem.find('.prev-comments');
+        const postId = postItem.data('id');
+        let commentSectionContent = '';
+        console.log(postId);
+        $.ajax({
+            url: `http://localhost:5001/api/v1/posts/${postId}/comments`,
+            method: "GET",
+            dataType: "json",
+            success: function(res) {
+                console.log(res);
+                res.forEach((comment) => {
+                    console.log(comment);
+                    commentSectionContent += `
+                    <div class="post-comments">
+                        <div class="pic">
+                            <img src="${comment.User.profile_photo}" alt="Profile Picture" />
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-writer">
+                                ${comment.User.name}
+                            </div>
+                            ${comment.content}
+                        </div>
+                    </div>`;
+                });
+
+                commentSection.html(commentSectionContent);
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to fetch comments:', xhr.responseText);
+            }
+        });
+    });
+
+    // Create a new comment
+    $('.feed').on('submit', '#comment-form', function(event) {
+        event.preventDefault();
+    
+        const postItem = $(this).closest('.post');
+        const commentSection = postItem.find('.prev-comments');
+        const commentContent = $(this).find('.comment-content').val();
+        const postId = postItem.data('id');
+    
+        const requestData = {
+            user_id: currentUserObject.id,
+            post_id: postId,
+            content: commentContent
+        };
+    
+        if (commentContent !== '') {
+            $.ajax({
+                url: 'http://localhost:5001/api/v1/comments',
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: function(res) {
+                    console.log("comment created successfully", res);
+                    let commentSectionContent = '';
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/posts/${postId}/comments`,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(res) {
+                            res.forEach((comment) => {
+                                commentSectionContent += `
+                                <div class="post-comments">
+                                    <div class="pic">
+                                        <img src="${comment.User.profile_photo}" alt="Profile Picture">
+                                    </div>
+                                    <div class="comment-item">
+                                        <div class="comment-writer">
+                                            ${comment.User.name}
+                                        </div>
+                                        ${comment.content}
+                                    </div>
+                                </div>`;
+                            });
+    
+                            $(this).find('.comment-content').val(''); // Clear the comment input
+                            commentSection.html(commentSectionContent);
+                        }.bind(this)
+                    });
+                },
+                error: function(err) {
+                    console.error("Error creating comment", err);
+                }
+            });
+        }
+    });
+    
+
+
     // Suggestions section ***************************************************
 
     // Display Suggested users to follow
