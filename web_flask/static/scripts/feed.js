@@ -14,7 +14,18 @@ $(document).ready(function() {
         return date.toLocaleDateString('en-US', options);
     }
 
+    // The current user's id
     const userId = $('.stats').data('user-id');
+
+    // Gets the current user: currentUserObject
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            currentUserObject = res;
+        }
+    });
 
     // Profile Card section ************************************************
 
@@ -83,9 +94,7 @@ $(document).ready(function() {
                 </div>
         `;
 
-        console.log('Scrolled'); // Debugging line
-
-        if ($(window).scrollTop() > 100) { // Adjust this value as needed
+        if ($(window).scrollTop() > 100) {
             if ($('.scroll-nav').length === 0) { // Only append if not already present
                 $('.profile-card').append(scrollNavHTML);
             }
@@ -129,6 +138,12 @@ $(document).ready(function() {
             data: formData,
             success: function(postResponse) {
                 console.log('Post created successfully!', postResponse);
+                
+                // Base Attributes for the Like button
+                thumbsup = "../static/images/thumbsup-symbol.png";
+                likeClass = "likes";
+                likeId = "";
+                textId = "like";
 
                 // Extract user_id from response
                 const postUserId = postResponse.user_id;
@@ -142,7 +157,7 @@ $(document).ready(function() {
 
                         // Create a new post element
                         const newPost = `
-                            <article class="post">
+                            <article class="post" data-id="${postResponse.id}">
                                 <header>
                                     <img src="../static/images/4.jpg" alt="User Avatar">
                                     <div class="user-info">
@@ -152,14 +167,10 @@ $(document).ready(function() {
                                 </header>
                                 <p class="text-content">${postResponse.content}</p>
                                 ${postResponse.picture ? `<div class="post-photo"><img src="${postResponse.picture}" alt="Post Image"></div>` : ''}
-                                <div class="likes-counter">
-                                    <img class="like-symbol" src="../static/images/like_symbol.png">
-                                    <span>0 Likes</span>
-                                </div>
                                 <div class="post-buttons">
-                                    <div class="like-group">
-                                        <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
-                                        <h5 id="like">Like</h5>
+                                    <div class="${likeClass}" id="like-group">
+                                        <img class="thumbsup-symbol" src="${thumbsup}" id="${likeId}">
+                                        <h5 id="${textId}">Like</h5>
                                     </div>
                                     <div class="comment-group">
                                         <img class="comment-symbol" src="../static/images/comment-symbol.png">
@@ -235,8 +246,28 @@ $(document).ready(function() {
         success: function(postsResponse) {
             let postsHTML = '';
             postsResponse.forEach(function(post) {
+
+                // Check if the current user likes this post so we can update the thumbs up img
+                if (currentUserObject.liked_posts.includes(post.id)) {
+                    thumbsup = "../static/images/blue-like-button-icon.png";
+                    likeClass = "unlike";
+                    likeId = "blue-like";
+                    textId = "liked"
+                } else {
+                    thumbsup = "../static/images/thumbsup-symbol.png";
+                    likeClass = "likes";
+                    likeId = "";
+                    textId = "like";
+                }
+
+                // Display the likes counter based on the number of likes
+                let likeText = '';
+                if (post.likes_no > 0) {
+                    likeText = post.likes_no === 1 ? '1 Like' : `${post.likes_no} Likes`;
+                }
+
                 postsHTML += `
-                    <article class="post">
+                    <article class="post" data-id="${post.id}">
                         <header>
                             <img src="../static/images/4.jpg" alt="User Avatar">
                             <div class="user-info">
@@ -246,14 +277,16 @@ $(document).ready(function() {
                         </header>
                         <p class="text-content">${post.content}</p>
                         ${post.picture ? `<div class="post-photo"><img src="${post.picture}" alt="Post Image"></div>` : ''}
-                        <div class="likes-counter">
-                            <img class="like-symbol" src="../static/images/like_symbol.png">
-                            <span>${post.likes_no} Likes</span>
-                        </div>
+                        ${post.likes_no > 0 ? `
+                            <div class="likes-counter">
+                                <img class="like-symbol" src="../static/images/like_symbol.png">
+                                <span>${likeText}</span>
+                            </div>
+                        ` : ''}
                         <div class="post-buttons">
-                            <div class="like-group">
-                                <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
-                                <h5 id="like">Like</h5>
+                            <div class="${likeClass}" id="like-group">
+                                <img class="thumbsup-symbol" src="${thumbsup}" id="${likeId}">
+                                <h5 id="${textId}">Like</h5>
                             </div>
                             <div class="comment-group">
                                 <img class="comment-symbol" src="../static/images/comment-symbol.png">
@@ -270,6 +303,100 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
             console.error('Failed to fetch posts:', xhr.responseText);
         }
+    });
+
+    // Like Button
+    $('.feed').on('click', '.likes', function() {
+        const postItem = $(this).closest('.post');
+        const postId = postItem.data('id');
+        const requestData = {
+            user_id: userId,
+            post_id: postId
+        };
+
+        $.ajax({
+            url: "http://localhost:5001/api/v1/likes",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function(res) {
+                const likeCounter = postItem.find('.likes-counter span');
+                const counterText = res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`;
+
+                // Check if .likes-counter exists, and handle accordingly
+                // If the counter is at 0, when liking for the first time, add the counter section
+                if (postItem.find('.likes-counter').length === 0) {
+                    postItem.find('.post-buttons').before(`
+                        <div class="likes-counter">
+                            <img class="like-symbol" src="../static/images/like_symbol.png">
+                            <span>${counterText}</span>
+                        </div>
+                    `);
+                } else {
+                    likeCounter.html(counterText);
+                }
+                
+                // Change like text to blue
+                const likeText = postItem.find('.likes h5');
+                likeText.text('Liked').attr('id', 'liked');
+
+                const likeImage = postItem.find('.likes img');
+
+                // Remove the element, update its attributes, and reinsert it
+                likeImage.remove(); // Remove the img element
+                
+                postItem.find('.likes').prepend(`
+                    <img class="new-class thumbsup-symbol" src="../static/images/blue-like-button-icon.png" id="blue-like">
+                `);
+
+                // Force redraw
+                const newLikeImage = postItem.find('.thumbsup-symbol');
+                newLikeImage.hide().show(0);
+
+                postItem.find('.likes').addClass('unlike').removeClass('likes');
+            }
+        });
+    });
+
+    // Unlike Button
+    $('.feed').on('click', '.unlike', function() {
+        const postItem = $(this).closest('.post');
+        const postId = postItem.data('id');
+
+        $.ajax({
+            url: `http://localhost:5001/api/v1/likes/${postId}/${userId}`,
+            method: "DELETE",
+            dataType: "json",
+            success: function(res) {
+                const likeCounter = postItem.find('.likes-counter span');
+                const counterText = res.like_no === 0 ? '' : (res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`);
+
+                // Check if .likes-counter exists and update or remove it
+                if (res.like_no === 0) {
+                    postItem.find('.likes-counter').remove();
+                } else {
+                    likeCounter.html(counterText);
+                }
+
+                // Change like text to grey
+                const likeText = postItem.find('.unlike h5');
+                likeText.text('Like').attr('id', 'like');
+
+                const likeImage = postItem.find('.unlike img');
+
+                // Remove the element, update its attributes, and reinsert it
+                likeImage.remove(); // Remove the img element
+                postItem.find('.unlike').prepend(`
+                    <img class="newClass thumbsup-symbol" src="../static/images/thumbsup-symbol.png" id="">
+                `);
+
+                // Force redraw
+                const newLikeImage = postItem.find('#blue-like');
+                newLikeImage.hide().show(0);
+
+                postItem.find('.unlike').addClass('likes').removeClass('unlike');
+                }
+        });
     });
 
 

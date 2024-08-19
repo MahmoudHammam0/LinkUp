@@ -446,12 +446,12 @@ main {
 }
 
 
-.like-group, .comment-group {
+#like-group, .comment-group {
     display: flex;
 }
 
-.like-group:hover .thumbsup-symbol,
-.like-group:hover #like {
+#like-group:hover .thumbsup-symbol,
+#like-group:hover #like {
     filter: sepia(14.4) hue-rotate(200deg) saturate(4.5);
     background-color: transparent;
 }
@@ -471,6 +471,20 @@ main {
     cursor: pointer;
     margin-top: 10px;
     margin-right: 33px;
+}
+
+#blue-like {
+    width: 22px;
+    height: 22px;
+    margin-top: 13px;
+    cursor: pointer;
+    margin-right: 7px;
+    margin-left: 5px;
+}
+
+#liked {
+    filter: sepia(14.4) hue-rotate(200deg) saturate(4.5);
+    background: transparent;
 }
 
 /* Suggestions styles */
