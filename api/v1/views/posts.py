@@ -8,7 +8,6 @@ from models import storage
 from api.v1.views import app_views
 from werkzeug.utils import secure_filename
 import os
-from datetime import datetime
 
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'web_flask', 'static', 'uploads')

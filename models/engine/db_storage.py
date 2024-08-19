@@ -131,3 +131,9 @@ class DBStorage:
                 return False
         else:
             return False
+        
+    def get_like(self, post_id, user_id):
+        "returns like obj for specific user and post"
+        like = self.__session.query(Like).filter_by(post_id=post_id, user_id=user_id).first()
+        if like:
+            return like

@@ -552,3 +552,10 @@ h6 {
   font-weight: bold;
   margin-bottom: 5px;
 }
+
+.unlike .thumbsup-symbol {
+  width: 31px;
+  height: 31px;
+  margin-right: 2px;
+  padding: 5px;
+}

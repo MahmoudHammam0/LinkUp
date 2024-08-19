@@ -25,7 +25,9 @@ def get_user_by_id(user_id):
     "return user by specific id"
     user = storage.get(User, user_id)
     if user:
-        return jsonify(user.to_dict())
+        user_dict = user.to_dict()
+        user_dict['liked_posts'] = [like.post_id for like in user.likes]
+        return jsonify(user_dict)
     else:
         abort(404)
 

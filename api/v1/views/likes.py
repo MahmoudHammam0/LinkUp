@@ -49,14 +49,16 @@ def create_like():
     return jsonify(like_dict), 201
 
 
-@app_views.route('/likes/<like_id>', methods=["DELETE"])
-def delete_like(like_id):
+@app_views.route('/likes/<post_id>/<user_id>', methods=["DELETE"])
+def delete_like(post_id, user_id):
     "delete the like with specific id"
-    like = storage.get(Like, like_id)
+    like = storage.get_like(post_id, user_id)
+    post = storage.get(Post, post_id)
     if like:
         storage.delete(like)
         storage.save()
-        return jsonify({}), 200
+        like_no = len(post.likes)
+        return jsonify({"like_no": like_no}), 200
     else:
         abort(404)
 

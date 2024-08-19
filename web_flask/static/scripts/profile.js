@@ -3,6 +3,8 @@ $(document).ready(function() {
     const currentUserId = $('.container').data('id');
     let userObject = '';
     let currentUserObject = ''
+    let thumbsup;
+    let likeClass;
 
     function formateDate(date) {
         const currntYear = new Date().getFullYear();
@@ -117,7 +119,6 @@ $(document).ready(function() {
         method: "GET",
         dataType: "json",
         success: function(res) {
-            console.log(res);
             userObject = res;
             
             $.ajax({
@@ -126,6 +127,13 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(res) {
                     res.forEach((post) => {
+                        if (currentUserObject.liked_posts.includes(post.id)) {
+                            thumbsup = "../static/images/blue-like-button-icon.png";
+                            likeClass = "unlike";
+                        } else {
+                            thumbsup = "../static/images/thumbsup-symbol.png";
+                            likeClass = "likes";
+                        }
                         const postItem = $(`
                             <div class="post-item" data-id="${post.id}">
                                 <div class="post-header">
@@ -145,8 +153,8 @@ $(document).ready(function() {
                                     <span>${post.likes_no} Likes</span>
                                 </div>
                                 <div class="post-buttons">
-                                    <button class="likes">
-                                        <img class="thumbsup-symbol" src="../static/images/thumbsup-symbol.png">
+                                    <button class="${likeClass}">
+                                        <img class="thumbsup-symbol" src="${thumbsup}">
                                         Like
                                     </button>
                                     <button class="comment">
@@ -294,6 +302,27 @@ $(document).ready(function() {
             success: function(res) {
                 const likeCounter = postItem.find('.likes-counter span');
                 likeCounter.html(`${res.like_no} Likes`);
+                const likeImage = postItem.find('.likes img');
+                likeImage.attr('src', '../static/images/blue-like-button-icon.png');
+                postItem.find('.likes').addClass('unlike').removeClass('likes');
+            }
+        });
+    });
+
+    $('.posts').on('click', '.unlike', function() {
+        const postItem = $(this).closest('.post-item');
+        const postId = postItem.data('id');
+
+        $.ajax({
+            url: `http://localhost:5001/api/v1/likes/${postId}/${currentUserId}`,
+            method: "DELETE",
+            dataType: "json",
+            success: function(res) {
+                const likeCounter = postItem.find('.likes-counter span');
+                likeCounter.html(`${res.like_no} Likes`);
+                const likeImage = postItem.find('.unlike img');
+                likeImage.attr('src', "../static/images/thumbsup-symbol.png");
+                postItem.find('.unlike').addClass('likes').removeClass('unlike');
             }
         });
     });
