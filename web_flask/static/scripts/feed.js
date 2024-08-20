@@ -159,9 +159,9 @@ $(document).ready(function() {
                         const newPost = `
                             <article class="post" data-id="${postResponse.id}">
                                 <header>
-                                    <img src="../static/images/4.jpg" alt="User Avatar">
+                                    <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">
                                     <div class="user-info">
-                                        <h3>${userResponse.name}</h3>
+                                        <h3 onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">${userResponse.name}</h3>
                                         <h5>${formattedDate}</h5>
                                     </div>
                                 </header>
@@ -275,9 +275,9 @@ $(document).ready(function() {
                 postsHTML += `
                     <article class="post" data-id="${post.id}">
                         <header>
-                            <img src="../static/images/4.jpg" alt="User Avatar">
+                            <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">
                             <div class="user-info">
-                                <h3>${post.user_name}</h3>
+                                <h3 onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">${post.user_name}</h3>
                                 <h5>${formatDate(post.created_at)}</h5>
                             </div>
                         </header>
