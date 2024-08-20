@@ -266,6 +266,12 @@ $(document).ready(function() {
                     likeText = post.likes_no === 1 ? '1 Like' : `${post.likes_no} Likes`;
                 }
 
+                // Display the comments counter based on the number of comments
+                let commentText = '';
+                if (post.comments_no > 0) {
+                    commentText = post.comments_no === 1 ? '1 Comment' : `${post.comments_no} Comments`;
+                }
+
                 postsHTML += `
                     <article class="post" data-id="${post.id}">
                         <header>
@@ -277,10 +283,15 @@ $(document).ready(function() {
                         </header>
                         <p class="text-content">${post.content}</p>
                         ${post.picture ? `<div class="post-photo"><img src="${post.picture}" alt="Post Image"></div>` : ''}
-                        ${post.likes_no > 0 ? `
+                        ${(post.likes_no > 0 || post.comments_no > 0) ? `
                             <div class="likes-counter">
-                                <img class="like-symbol" src="../static/images/like_symbol.png">
-                                <span>${likeText}</span>
+                                ${post.likes_no > 0 ? `
+                                    <img class="like-symbol" src="../static/images/like_symbol.png">
+                                    <span class="likes_no"  id="likes_no">${likeText}</span>
+                                ` : ''}
+                                ${post.comments_no > 0 ? `
+                                    <span class="comments_no">${commentText}</span>
+                                ` : ''}
                             </div>
                         ` : ''}
                         <div class="post-buttons">
@@ -320,20 +331,40 @@ $(document).ready(function() {
             contentType: "application/json",
             data: JSON.stringify(requestData),
             success: function(res) {
-                const likeCounter = postItem.find('.likes-counter span');
+                const likeCounter = postItem.find('#likes_no');
                 const counterText = res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`;
 
                 // Check if .likes-counter exists, and handle accordingly
-                // If the counter is at 0, when liking for the first time, add the counter section
+                // If the counter is at 0, when liking for the first time
+
+                // If there are no comments or likes
                 if (postItem.find('.likes-counter').length === 0) {
+                    // Add the whole counter section
                     postItem.find('.post-buttons').before(`
                         <div class="likes-counter">
                             <img class="like-symbol" src="../static/images/like_symbol.png">
-                            <span>${counterText}</span>
+                            <span class="likes_no" id="likes_no">${counterText}</span>
                         </div>
                     `);
+                // if there are comments or likes
                 } else {
-                    likeCounter.html(counterText);
+                    // If there is a comments counter
+                    if (postItem.find('.comments_no').length !== 0) {
+                        // If there are no likes
+                        if (likeCounter.length === 0) {
+                            // prepend the likes counter to it
+                            postItem.find('.likes-counter').prepend(`
+                                <img class="like-symbol" src="../static/images/like_symbol.png">
+                                <span id="likes_no">${counterText}</span>
+                            `);
+                        // If there are likes
+                        } else {
+                            likeCounter.html(counterText);
+                        }
+                    // if there are likes
+                    } else {
+                        likeCounter.html(counterText);
+                    }
                 }
                 
                 // Change like text to blue
@@ -368,12 +399,22 @@ $(document).ready(function() {
             method: "DELETE",
             dataType: "json",
             success: function(res) {
-                const likeCounter = postItem.find('.likes-counter span');
+                const likeCounter = postItem.find('#likes_no');
                 const counterText = res.like_no === 0 ? '' : (res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`);
 
-                // Check if .likes-counter exists and update or remove it
+                // Update likes counter if there are 0 likes
                 if (res.like_no === 0) {
-                    postItem.find('.likes-counter').remove();
+                    // if there isn't a comment counter (0 comments)
+                    if (postItem.find('.comments_no').length === 0) {
+                        const likesCounter = postItem.find('.likes-counter');
+                        // remove the whole counter section
+                        likesCounter.remove();
+                    // if the comments counter exist (1 or more comments)
+                    } else if (postItem.find('.comments_no').length !== 0) {
+                        // remove only the like counter
+                        postItem.find('.like-symbol').remove();
+                        postItem.find('#likes_no').remove();
+                    }
                 } else {
                     likeCounter.html(counterText);
                 }
@@ -401,8 +442,11 @@ $(document).ready(function() {
 
 
     // Show post comments when you click on comment button
-    $('.feed').on('click', '.comment-group #comment', function() {
+    $('.feed').on('click', '.comment-group, .comments_no', function() {
         const postItem = $(this).closest('.post');
+
+        // Add id to these elements so we can click on it to hide the comments 
+        $(this).attr('id', 'hide-comments');
 
         if (postItem.find('input').length === 0) {
             postItem.append(`
@@ -431,9 +475,9 @@ $(document).ready(function() {
             method: "GET",
             dataType: "json",
             success: function(res) {
-                console.log(res);
+                // console.log(res);
                 res.forEach((comment) => {
-                    console.log(comment);
+                    // console.log(comment);
                     commentSectionContent += `
                     <div class="post-comments">
                         <div class="pic">
@@ -454,6 +498,19 @@ $(document).ready(function() {
                 console.error('Failed to fetch comments:', xhr.responseText);
             }
         });
+    });
+
+    // Hide comments on second click on comment button or comments counter
+    $('.feed').on('click', '#hide-comments', function() {
+        const postItem = $(this).closest('.post');
+
+        // Remove the #hide-comments ID
+        $(this).closest('.comment-group').removeAttr('id');
+        $(this).closest('.comments_no').removeAttr('id');
+
+        // Hide the comments
+        postItem.find('.prev-comments').remove();
+        postItem.find('.comment-div').remove();
     });
 
     // Create a new comment
@@ -480,6 +537,7 @@ $(document).ready(function() {
                 success: function(res) {
                     console.log("comment created successfully", res);
                     let commentSectionContent = '';
+
                     $.ajax({
                         url: `http://localhost:5001/api/v1/posts/${postId}/comments`,
                         method: "GET",
@@ -502,6 +560,26 @@ $(document).ready(function() {
     
                             $(this).find('.comment-content').val(''); // Clear the comment input
                             commentSection.html(commentSectionContent);
+
+                            // Update comment counter
+                            const commentCounter = postItem.find('.comments_no');
+                            const counterText = res.length === 1 ? '1 Comment' : `${res.length} Comments`;
+
+                            if (postItem.find('.comments_no').length === 0) {
+                                if (postItem.find('.likes_no').length === 0) {
+                                    postItem.find('.likes_no').after(`
+                                        <span class="comments_no">${counterText}</span>
+                                    `);
+                                } else {
+                                    postItem.find('.post-buttons').after(`
+                                        <div class="likes-counter">
+                                            <span class="comments_no">${counterText}</span>
+                                        </div>
+                                    `);
+                                }
+                            } else {
+                                commentCounter.html(counterText);
+                            }
                         }.bind(this)
                     });
                 },

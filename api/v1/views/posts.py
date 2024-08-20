@@ -44,6 +44,10 @@ def get_posts_of_user(user_id):
         likes_no = len(post.likes)
         post_dict = post.to_dict()
         post_dict['likes_no'] = likes_no
+
+        comments_no = len(post.comments)
+        post_dict['comments_no'] = comments_no
+
         post_dict['user_name'] = user.name
 
         # Convert 'likes' to a list of serializable data (IDs)

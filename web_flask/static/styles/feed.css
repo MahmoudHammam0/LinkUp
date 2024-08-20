@@ -406,6 +406,8 @@ main {
     color: #333;
     margin-bottom: 10px;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .likes-counter span {
@@ -420,6 +422,16 @@ main {
     height: 16px;
     align-self: center;
     margin-right: 8px;
+}
+
+.comments_no {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.likes_no {
+    position: absolute;
+    margin-left: 24px;
 }
 
 .post .post-buttons {
@@ -562,7 +574,7 @@ main {
   
 .comment-item {
     display: block;
-    background-color: #f0ecf3;
+    background-color: #F0F2F5;
     padding: 12px 19px;
     border-radius: 24px;
     margin: 5px 0;
