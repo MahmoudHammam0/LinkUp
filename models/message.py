@@ -8,6 +8,6 @@ class Message(BaseModel, Base):
     "messages table"
     __tablename__ = 'messages'
     content = Column(String(5000), nullable=False)
-    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    sender_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     chat_id = Column(String(60), ForeignKey('chats.id'), nullable=False)
     read = Column(Boolean, default=False)

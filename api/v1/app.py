@@ -4,11 +4,13 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from api.v1.views import app_views
 from models import storage
+from flask_socketio import SocketIO, send
 
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 app.register_blueprint(app_views)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 @app.teardown_appcontext
@@ -27,5 +29,11 @@ def not_found(error):
     return jsonify({"Error": error.description}), 400
 
 
+@socketio.on('message')
+def handle_message(message):
+    print("Received message: " + message)
+    send(message, broadcast=True)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, threaded=True, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5001, debug=True)

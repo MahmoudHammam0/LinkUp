@@ -45,6 +45,12 @@ def profile(user_id):
     return render_template('profile.html', user=retrieved_user)
 
 
+@app.route('/chat')
+def chat():
+    "Chat page"
+    return render_template("chat.html")
+
+
 @app.route('/logout')
 def logout():
     "logout the current user"
