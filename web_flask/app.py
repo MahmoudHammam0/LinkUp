@@ -45,10 +45,11 @@ def profile(user_id):
     return render_template('profile.html', user=retrieved_user)
 
 
-@app.route('/chat')
-def chat():
+@app.route('/chat/<user_id>')
+def chat(user_id):
     "Chat page"
-    return render_template("chat.html")
+    user = storage.get(User, user_id)
+    return render_template("chat.html", user=user)
 
 
 @app.route('/logout')

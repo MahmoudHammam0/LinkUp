@@ -1,0 +1,159 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Header styles */
+header {
+  background-color: #ffffff;
+  /*padding: 10px 150px;*/
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo img {
+  width: 24px;
+  margin-left: 155px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav input {
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid #b1b1b157;
+  width: 300px;
+  background-color: #d9c0de21;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  margin-right: 90px;
+}
+
+nav ul li {
+  margin-left: 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #895ea8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(1.8);
+}
+
+.nav-icon.active{
+  filter: brightness(2.2);
+}
+
+#profile-icon {
+  filter: brightness(1.9);
+  filter: sepia(9.4) hue-rotate(249deg) saturate(6.5);
+}
+
+#message-icon {
+  filter: contrast(56%);
+}
+
+#logout-icon {
+  filter: contrast(113%);
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #cfe9ff;
+}
+
+.received {
+    align-self: flex-start;
+    background-color: #f1f1f1;
+}
+
+p {
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 50%;
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.messages {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+#message {
+    width: 100%;
+
+}
+
+#message-form {
+    flex: 1;
+}
+
+.message-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #ddd;
+    padding: 15px 10px;
+    background-color: #d9c0de21;
+}
+
+.message-section input[type="text"] {
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.message-section input[type="submit"] {
+    display: none;
+}
+
+.message-section input[type="text"]:focus {
+    outline: none;
+}
+
+.user-photo img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.message-div {
+    display: flex;
+    align-items: center;
+}
+
+.message-div img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin: 0 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
