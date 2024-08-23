@@ -1,21 +1,30 @@
 $(document).ready(function() {
-    currentUserId = $('.main-container').data('id');
+    // the current user (sender)
+    currentUserId = $('.main-container').data('current-id');
+    
+    // the other user (receiver)
+    otherUserId = $('.main-container').data('other-id');
+
     const socket = io.connect("http://localhost:5001");
 
     socket.on('message', function(data) {
-        senderId = data.userId;
+        senderId = data.senderId;
+        receiverId = data.receiverId;
         content = data.messageContent;
-        senderImg = data.userImg
+        senderImg = data.senderImg
 
         const messageParagraph = $('<p>').text(content);
         const messageDiv = $('<div>').addClass('message-div');
 
-        if (senderId === currentUserId) {
+        // We're sending
+        if (senderId === currentUserId && receiverId === otherUserId) {
             messageParagraph.addClass('sent');
             messageDiv.append(messageParagraph);
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.css('justify-content', 'flex-end');
-        } else {
+        // We're receiving
+        // Only show messages from the other user, to prevent receing messages from everyone
+        } else if (senderId === otherUserId && receiverId === currentUserId) {
             messageParagraph.addClass('received');
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.append(messageParagraph);
@@ -29,8 +38,9 @@ $(document).ready(function() {
     $('#message-form').on('submit', function(event) {
         event.preventDefault();
         messageData = {
-            userId: currentUserId,
-            userImg: $('.user-photo img').attr('src'),
+            senderId: currentUserId,
+            receiverId: otherUserId,
+            senderImg: $('.user-photo img').attr('src'),
             messageContent: $('#message').val()
         };
         socket.send(messageData);

@@ -45,11 +45,20 @@ def profile(user_id):
     return render_template('profile.html', user=retrieved_user)
 
 
-@app.route('/chat/<user_id>')
-def chat(user_id):
+@app.route('/chat')
+def chat():
     "Chat page"
-    user = storage.get(User, user_id)
-    return render_template("chat.html", user=user)
+    sender_id = request.args.get('sender_id') # current user
+    receiver_id = request.args.get('receiver_id')
+
+    if not sender_id or not receiver_id:
+        abort(400, 'Missing sender_id or receiver_id')
+
+    if sender_id == receiver_id or sender_id != current_user.id:
+        return redirect(url_for('home'))
+    
+    other_user = storage.get(User, receiver_id)
+    return render_template("chat.html", user=current_user, other_user=other_user)
 
 
 @app.route('/logout')
