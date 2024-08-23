@@ -46,4 +46,37 @@ $(document).ready(function() {
         socket.send(messageData);
         $('#message').val('');
     });
+
+    // Populate the chat list of suggested chats with the following
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${currentUserId}/following`, // Endpoint to get users following
+        method: 'GET',
+        success: function(data) {
+            const chatList = $('.chat-list');
+            chatList.empty(); // Clear existing list
+            data.forEach(user => {
+                const chatItem = `
+                    <div class="chat-item" data-receiver-id="${user.id}">
+                        <img src="${user.profile_photo}" alt="User Photo" class="chat-user-photo">
+                        <span>${user.name}</span>
+                    </div>
+                `;
+
+                // Prevents adding the current user to the chat list
+                if (user.id !== currentUserId) {
+                    chatList.append(chatItem);
+                }
+            });
+
+            // Attach click event handler to each chat item, to open the chat
+            $('.chat-item').on('click', function() {
+                const rcvrId = $(this).data('receiver-id');
+                const chatUrl = `http://localhost:5000/chat?sender_id=${currentUserId}&receiver_id=${rcvrId}`;
+                window.location.href = chatUrl;
+            });
+        },
+        error: function() {
+            console.error('Error fetching following users.');
+        }
+    });
 });
