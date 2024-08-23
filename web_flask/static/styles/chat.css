@@ -238,3 +238,29 @@ p {
   font-size: 16px;
   color: #333;
 }
+
+
+/* Start a new chat msg */
+.empty-chat-message {
+  align-content: center;
+  text-align: center;
+  padding: 116px;
+  box-sizing: border-box;
+  color: #555;
+  background: linear-gradient(42deg, #ded3eb -15%, #fff 80%);
+  width: -webkit-fill-available;
+}
+
+.empty-chat-message h2 {
+  font-size: 30px;
+  color: #333;
+  margin-bottom: 10px;
+  color: #333333e6;
+}
+
+.empty-chat-message h3 {
+  font-size: 14px;
+  color: #666;
+  color: #a561b1;
+  font-weight: 400;
+}

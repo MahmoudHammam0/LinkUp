@@ -51,14 +51,27 @@ def chat():
     sender_id = request.args.get('sender_id') # current user
     receiver_id = request.args.get('receiver_id')
 
-    if not sender_id or not receiver_id:
+    # Hides the chat content until you select a chat
+    hide_chat_content = False
+
+    if not sender_id:
         abort(400, 'Missing sender_id or receiver_id')
+
+    if not receiver_id:
+        hide_chat_content = True
 
     if sender_id == receiver_id or sender_id != current_user.id:
         return redirect(url_for('home'))
     
     other_user = storage.get(User, receiver_id)
-    return render_template("chat.html", user=current_user, other_user=other_user)
+    return render_template("chat.html", user=current_user, other_user=other_user, hide_chat_content=hide_chat_content)
+
+
+@app.route('/messages')
+def messages():
+    "messages page"
+    sender_id = current_user.id
+    return redirect(url_for('chat', sender_id=sender_id))
 
 
 @app.route('/logout')
