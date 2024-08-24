@@ -327,6 +327,24 @@ $(document).ready(function() {
         });
     });
 
+    $('.messages').on('click', function() {
+        requestData = {
+            auth_user_id: currentUserId,
+            user_id: userId
+        };
+
+        $.ajax({
+            url: "http://localhost:5001/api/v1/chats",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function(res) {
+                console.log("chat created successfully", res);
+                window.location.href = `/chat/${res.id}`;
+            }
+        })
+    });
+
     // $('.cover-photo').on('click', function() {
     //     overlay.style.display = 'flex';
     //     $('.form-container').html(`

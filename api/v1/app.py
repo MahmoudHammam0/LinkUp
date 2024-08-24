@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 "API app"
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session, request
 from flask_cors import CORS
 from api.v1.views import app_views
 from models import storage
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, join_room, leave_room, disconnect
 
 
 app = Flask(__name__)
@@ -29,9 +29,32 @@ def not_found(error):
     return jsonify({"Error": error.description}), 400
 
 
+@socketio.on('join')
+def join_chat(data):
+    "add a user to the chat room"
+    from models.chat import Chat
+    room = data['room']
+    user_id = data['current_user_id']
+    chat_id = room.split('_')[-1]
+    chat = storage.get(Chat, chat_id)
+    users_ids = [user.id for user in chat.users]
+    if chat and user_id in users_ids:
+        join_room(room)
+    else:
+        send("Access denied.", to=request.sid)
+        disconnect()
+
+
 @socketio.on('message')
-def handle_message(message):
-    send(message, broadcast=True)
+def handle_message(data):
+    send(data['message'], room=data['room'])
+
+
+# @socketio.on('leave')
+# def leave_chat(data):
+#     room = data['room']
+#     leave_room(room)
+#     send(f"User has left the room {room}.", room=room)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,40 @@ $(document).ready(function() {
     otherUserId = $('.main-container').data('other-id');
 
     const socket = io.connect("http://localhost:5001");
+    const room = $('.main-container').data('room');
+    const roomInfo = room.split('_');
+    const roomId = roomInfo[roomInfo.length - 1];
+    console.log(roomId);
+
+    socket.emit('join', { room: room, current_user_id: currentUserId });
+
+    $.ajax({
+        url: `http://localhost:5001/api/v1/chats/${roomId}/messages`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            res.forEach((message) => {
+                const messageParagraph = $('<p>').text(message.content);
+                const messageDiv = $('<div>').addClass('message-div');
+
+                // We're sending
+                if (message.sender_id === currentUserId) {
+                    messageParagraph.addClass('sent');
+                    messageDiv.append(messageParagraph);
+                    messageDiv.append(`<img src="${message.sender_img}">`);
+                    messageDiv.css('justify-content', 'flex-end');
+                // We're receiving
+                // Only show messages from the other user, to prevent receing messages from everyone
+                } else {
+                    messageParagraph.addClass('received');
+                    messageDiv.append(`<img src="${message.sender_img}">`);
+                    messageDiv.append(messageParagraph);
+                    messageDiv.css('justify-content', 'flex-start');
+                }
+                $('.messages').append(messageDiv);
+            });
+        }
+    });
 
     socket.on('message', function(data) {
         senderId = data.senderId;
@@ -17,14 +51,14 @@ $(document).ready(function() {
         const messageDiv = $('<div>').addClass('message-div');
 
         // We're sending
-        if (senderId === currentUserId && receiverId === otherUserId) {
+        if (senderId === currentUserId) {
             messageParagraph.addClass('sent');
             messageDiv.append(messageParagraph);
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.css('justify-content', 'flex-end');
         // We're receiving
         // Only show messages from the other user, to prevent receing messages from everyone
-        } else if (senderId === otherUserId && receiverId === currentUserId) {
+        } else {
             messageParagraph.addClass('received');
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.append(messageParagraph);
@@ -43,8 +77,30 @@ $(document).ready(function() {
             senderImg: $('.user-photo img').attr('src'),
             messageContent: $('#message').val()
         };
-        socket.send(messageData);
-        $('#message').val('');
+        console.log(messageData)
+        if (messageData.messageContent !== '') {
+            socket.send({
+                message: messageData,
+                room: room
+            });
+            $('#message').val('');
+
+            requestData = {
+                content: messageData.messageContent,
+                sender_id: messageData.senderId,
+                chat_id: roomId
+            };
+            console.log(requestData)
+            $.ajax({
+                url: "http://localhost:5001/api/v1/messages",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: function(res) {
+                    console.log("Message created successfully", res);                    
+                }
+            })
+        }
     });
 
     // Populate the chat list of suggested chats with the following
@@ -71,8 +127,20 @@ $(document).ready(function() {
             // Attach click event handler to each chat item, to open the chat
             $('.chat-item').on('click', function() {
                 const rcvrId = $(this).data('receiver-id');
-                const chatUrl = `http://localhost:5000/chat?sender_id=${currentUserId}&receiver_id=${rcvrId}`;
-                window.location.href = chatUrl;
+                requestData = {
+                    auth_user_id: currentUserId,
+                    user_id: rcvrId
+                };
+                $.ajax({
+                    url: "http://localhost:5001/api/v1/chats",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function(res) {
+                        console.log("chat created successfully", res);
+                        window.location.href = `/chat/${res.id}`;
+                    }
+                })
             });
         },
         error: function() {

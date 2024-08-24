@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
 from models.chat import Chat
+from models.user import User
 
 
 @app_views.route('/chats', methods=["GET"])
@@ -25,6 +26,23 @@ def get_specific_chat(chat_id):
         abort(404)
 
 
+@app_views.route('/chats/<chat_id>/messages', methods=["GET"])
+def get_messages_for_chat(chat_id):
+    "return all messsages for a specific chat"
+    chat = storage.get(Chat, chat_id)
+    if chat:
+        messages = []
+        for msg in chat.messages:
+            user = storage.get(User, msg.sender_id)
+            message_dict = msg.to_dict()
+            message_dict['sender_img'] = user.profile_photo
+            messages.append(message_dict)
+        messages.sort(key=lambda x: x['created_at'])
+        return jsonify(messages)
+    else:
+        abort(404)
+
+
 @app_views.route('/chats', methods=["POST"])
 def create_chat():
     "create a new chat and save to storage"
@@ -32,15 +50,26 @@ def create_chat():
     if not chat_data:
         abort(400, "Not A Valid Json")
 
-    user_ids = chat_data.get('user_ids')
-    if not user_ids:
-        abort(400, "Missing User_ids")
+    data = ['auth_user_id', 'user_id']
+    for info in data:
+        if not info in chat_data.keys():
+            abort(400, f"Missing {info.capitalize()}")
 
-    new_chat = Chat()
-    new_chat.add_users(user_ids)
-    new_chat.save()
-
-    return jsonify(new_chat.to_dict()), 201
+    auth_user_id = chat_data.get('auth_user_id')
+    user_id = chat_data.get('user_id')
+    if auth_user_id and user_id:
+        chat = storage.find_existing_chat(auth_user_id, user_id)
+    
+    if chat:
+        return jsonify(chat.to_dict())
+    
+    else:
+        new_chat = Chat()
+        new_chat.add_users([auth_user_id, user_id])
+        new_chat.save()
+        new_chat_dict = new_chat.to_dict()
+        new_chat_dict['users'] = [user.id for user in new_chat_dict['users']]
+        return jsonify(new_chat_dict), 201
 
 
 @app_views.route('/chats/<chat_id>', methods=["DELETE"])

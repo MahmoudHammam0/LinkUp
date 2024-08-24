@@ -665,6 +665,22 @@ $(document).ready(function() {
                         $('#following-count').text(`Following: ${totalFollowing}`);
                     }
                 });
+
+                requestData = {
+                    auth_user_id: currentUserObject.id,
+                    user_id: followUserId
+                };
+        
+                $.ajax({
+                    url: "http://localhost:5001/api/v1/chats",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function(res) {
+                        console.log("chat created successfully", res);
+                        window.location.href = `/chat/${res.id}`;
+                    }
+                })
             },
         });
     });

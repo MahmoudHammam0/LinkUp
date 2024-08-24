@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 "Flask app"
-from flask import Flask, render_template, redirect, request, url_for, abort, jsonify, flash
+from flask import Flask, render_template, redirect, request, url_for, abort, jsonify, flash, session
 from models import storage
 from models.user import User
+from models.chat import Chat
 from flask_login import LoginManager, login_user, logout_user, current_user
 
 
@@ -45,33 +46,31 @@ def profile(user_id):
     return render_template('profile.html', user=retrieved_user)
 
 
-@app.route('/chat')
-def chat():
+@app.route('/chat/<chat_id>')
+def chat_page(chat_id):
     "Chat page"
-    sender_id = request.args.get('sender_id') # current user
-    receiver_id = request.args.get('receiver_id')
-
-    # Hides the chat content until you select a chat
-    hide_chat_content = False
-
-    if not sender_id:
-        abort(400, 'Missing sender_id or receiver_id')
-
-    if not receiver_id:
-        hide_chat_content = True
-
-    if sender_id == receiver_id or sender_id != current_user.id:
-        return redirect(url_for('home'))
-    
-    other_user = storage.get(User, receiver_id)
-    return render_template("chat.html", user=current_user, other_user=other_user, hide_chat_content=hide_chat_content)
+    if current_user.is_authenticated:
+        chat = storage.get(Chat, chat_id)
+        if chat and current_user.id in [user.id for user in chat.users]:
+            for user in chat.users:
+                if user.id != current_user.id:
+                    other_user = user
+            room = f"chat_room_for_{chat_id}"
+            session['room'] = room
+            return render_template("chat.html", room=room,
+                                                user=current_user,
+                                                other_user=other_user)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return render_template("home.html")
 
 
-@app.route('/messages')
-def messages():
-    "messages page"
-    sender_id = current_user.id
-    return redirect(url_for('chat', sender_id=sender_id))
+# @app.route('/messages')
+# def messages():
+#     "messages page"
+#     sender_id = current_user.id
+#     return redirect(url_for('chat', sender_id=sender_id))
 
 
 @app.route('/logout')

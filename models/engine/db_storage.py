@@ -137,3 +137,21 @@ class DBStorage:
         like = self.__session.query(Like).filter_by(post_id=post_id, user_id=user_id).first()
         if like:
             return like
+        
+
+    def find_existing_chat(self, auth_user_id, user_id):
+        "check if the of user ids present in a chat"
+        auth_user = self.get(User, auth_user_id)
+        user = self.get(User, user_id)
+        if not auth_user or not user:
+            return None
+        existing_chat = self.__session.query(Chat).join(
+            Chat.users
+        ).filter(
+            Chat.users.any(id=auth_user_id),
+            Chat.users.any(id=user_id)
+        ).first()
+
+        if existing_chat:
+            return existing_chat
+        return None
