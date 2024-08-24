@@ -5,7 +5,10 @@ $(document).ready(function() {
     // Convert the queries string into an array
     const queriesArray = queriesString ? queriesString.split(',') : [];
 
-    // Create containers for users and posts
+    // Put the original query string in the search bar
+    $('#search-input').val(queriesArray.join(' '));
+
+    // Create containers for users and posts search results
     const $usersContainer = $('<div>').attr('id', 'users-results');
     const $postsContainer = $('<div>').attr('id', 'posts-results');
 
@@ -16,6 +19,21 @@ $(document).ready(function() {
     let usersHeadingAdded = false;
     let postsHeadingAdded = false;
 
+
+    // Function that formats the date to: "MMM D, h:mm a"
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true
+        };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    
     // Populate the search page with search results
     // Iterate over each keyword and perform AJAX requests
     queriesArray.forEach(keyword => {
@@ -38,7 +56,9 @@ $(document).ready(function() {
                     filteredUsers.forEach(user => {
                         $usersContainer.append(
                             `<div class="result-item">
-                                <h3>${user.name}</h3>
+                                <img class="user-img" src="${user.profile_photo}" onclick="window.location.href='http://localhost:5000/profile/${user.id}';">
+                                <h3 onclick="window.location.href='http://localhost:5000/profile/${user.id}';">${user.name}</h3>
+                                <button class="follow-button" data-user-id="${user.id}">Follow</button>
                             </div>`
                         );
                     });
@@ -66,10 +86,22 @@ $(document).ready(function() {
                         postsHeadingAdded = true;
                     }
                     filteredPosts.forEach(post => {
+                        // The post owner
+                        const user = post.user;
+                        
                         $postsContainer.append(
-                            `<div class="result-item">
-                                <p>${post.content}</p>
-                            </div>`
+                            `<article class="post" data-id="${post.id}">
+                                <header>
+                                    <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='http://localhost:5000/profile/${user.id}';" style="cursor: pointer;">
+                                    <div class="user-info">
+                                        <h3 onclick="window.location.href='http://localhost:5000/profile/${user.id}';" style="cursor: pointer;">${user.name}</h3>
+                                        <h5>${formatDate(post.created_at)}</h5>
+                                    </div>
+                                </header>
+                                <p class="text-content">${post.content}</p>
+                                ${post.picture ? `<div class="post-photo"><img src="${post.picture}" alt="Post Image"></div>` : ''}
+                                
+                            </article>`
                         );
                     });
                 }

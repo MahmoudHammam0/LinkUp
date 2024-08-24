@@ -18,7 +18,13 @@ def get_all_posts():
     "return all posts"
     posts = []
     for post in storage.all(Post).values():
-        posts.append(post.to_dict())
+        post_dict = post.to_dict()
+
+        user = storage.get(User, post.user_id)
+
+        post_dict['user'] = user.to_dict()
+
+        posts.append(post_dict)
     return jsonify(posts)
 
 
