@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Link Up</title>
+  <link rel="icon" href="../static/images/logo.png" />
+  <link rel="stylesheet" href="../static/styles/search.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../static/scripts/search.js"></script>
+</head>
+
+<body>
+
+    <!-- *** Navigation Header *** -->
+    <header>
+      <nav>
+            <div class="logo">
+              <img src="../static/images/logo_cut.png">
+            </div>
+
+            <form id="search-form" autocomplete="off">
+                <input id="search-input" type="text" placeholder="Search...">
+            </form> 
+
+            <ul>
+                <!--Feed-->
+                <li>
+                    <a href="{{ url_for('home') }}">
+                        <img class="nav-icon" src="../static/images/home-icon.png">
+                    </a>
+                </li>
+              
+                <!--Profile-->
+                <li>
+                    <a href="#">
+                        <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
+                    </a>
+                </li>
+                
+                <!--Messages-->
+                <li>
+                    <a href="#">
+                        <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
+                    </a>
+                </li>
+                
+                <!--Logout-->
+                <li>
+                    <a href="{{ url_for('logout') }}">
+                        <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- *** End of Navigation Header *** -->
+
+    <!-- *** Search Results Section *** -->
+    <!-- Data queries passed from Flask -->
+    <div id="data" data-queries="{{ queries|join(',') }}"></div>
+
+    <div id="results"></div> 
+
+</body>
+</html>

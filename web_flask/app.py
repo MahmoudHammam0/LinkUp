@@ -80,6 +80,14 @@ def chat_page(chat_id):
 #     return redirect(url_for('chat', sender_id=sender_id))
 
 
+@app.route('/search/<keywords>', methods=['GET'])
+def search_results(keywords):
+    "Search page"
+    # Split keywords into a list based on spaces
+    query_list = keywords.split(' ')
+    return render_template('search.html', queries=query_list)
+
+
 @app.route('/logout')
 def logout():
     "logout the current user"

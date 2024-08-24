@@ -161,4 +161,18 @@ $(document).ready(function() {
             console.error('Error fetching following users.');
         }
     });
+
+
+    // Search
+    // Handle "Enter" key press to submit the form
+    $('#search-input').on('keypress', function(event) {
+        if (event.key === 'Enter') { // Check if "Enter" key was pressed
+            event.preventDefault();
+            const query = $('#search-input').val().trim();
+            if (query) {
+                // Redirect to search results page with query as a parameter
+                window.location.href = `/search/${query}`;
+            }
+        }
+    });
 });
