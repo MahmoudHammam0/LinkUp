@@ -6,13 +6,19 @@ $(document).ready(function() {
     otherUserId = $('.main-container').data('other-id');
 
     const socket = io.connect("http://localhost:5001");
+
+    // room = "chat_room_for_(chat.id)"
     const room = $('.main-container').data('room');
     const roomInfo = room.split('_');
+    // roomId is the chat.id
     const roomId = roomInfo[roomInfo.length - 1];
     console.log(roomId);
 
+    // Let's the current user join the room/chat with the chat id
     socket.emit('join', { room: room, current_user_id: currentUserId });
 
+
+    // Populate the chat section with old messages stored in the database
     $.ajax({
         url: `http://localhost:5001/api/v1/chats/${roomId}/messages`,
         method: "GET",
@@ -22,25 +28,27 @@ $(document).ready(function() {
                 const messageParagraph = $('<p>').text(message.content);
                 const messageDiv = $('<div>').addClass('message-div');
 
-                // We're sending
+                // Sent messages
                 if (message.sender_id === currentUserId) {
                     messageParagraph.addClass('sent');
                     messageDiv.append(messageParagraph);
                     messageDiv.append(`<img src="${message.sender_img}">`);
                     messageDiv.css('justify-content', 'flex-end');
-                // We're receiving
-                // Only show messages from the other user, to prevent receing messages from everyone
+                // Rceived messages
                 } else {
                     messageParagraph.addClass('received');
                     messageDiv.append(`<img src="${message.sender_img}">`);
                     messageDiv.append(messageParagraph);
                     messageDiv.css('justify-content', 'flex-start');
                 }
+
                 $('.messages').append(messageDiv);
             });
         }
     });
 
+
+    // Logic to send a message
     socket.on('message', function(data) {
         senderId = data.senderId;
         receiverId = data.receiverId;
@@ -69,6 +77,7 @@ $(document).ready(function() {
         
     });
 
+    // Send a message when we hit send/submit
     $('#message-form').on('submit', function(event) {
         event.preventDefault();
         messageData = {
@@ -79,6 +88,7 @@ $(document).ready(function() {
         };
         console.log(messageData)
         if (messageData.messageContent !== '') {
+            // Send the message through socket
             socket.send({
                 message: messageData,
                 room: room
@@ -91,6 +101,7 @@ $(document).ready(function() {
                 chat_id: roomId
             };
             console.log(requestData)
+            // Store the message in the database
             $.ajax({
                 url: "http://localhost:5001/api/v1/messages",
                 method: "POST",
@@ -102,6 +113,7 @@ $(document).ready(function() {
             })
         }
     });
+
 
     // Populate the chat list of suggested chats with the following
     $.ajax({
@@ -118,7 +130,7 @@ $(document).ready(function() {
                     </div>
                 `;
 
-                // Prevents adding the current user to the chat list
+                // Prevents from adding the current user to the chat list
                 if (user.id !== currentUserId) {
                     chatList.append(chatItem);
                 }
@@ -131,6 +143,8 @@ $(document).ready(function() {
                     auth_user_id: currentUserId,
                     user_id: rcvrId
                 };
+
+                // When clicking on a chat, it creates a new one if it doesn't exist, or opens it if it exists already
                 $.ajax({
                     url: "http://localhost:5001/api/v1/chats",
                     method: "POST",

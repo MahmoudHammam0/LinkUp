@@ -48,7 +48,7 @@ new_user.add_follower(new_user4.id)
 print("Followers: ")
 for follower in new_user.followers:
     print(follower)
-
+"""
 new_chat = Chat()
 new_chat.save()
 
@@ -139,5 +139,5 @@ new_notification.save()
 print("Notifications for new_user:")
 for notification in new_user.notifications:
     print(notification)
-
+"""
 print("DONE!")

@@ -38,6 +38,7 @@ def home():
     
     return render_template('feed.html', user=current_user)
 
+
 @app.route('/profile/<user_id>')
 def profile(user_id):
     "user profile page"
@@ -60,6 +61,12 @@ def chat_page(chat_id):
             return render_template("chat.html", room=room,
                                                 user=current_user,
                                                 other_user=other_user)
+        elif chat_id == current_user.id:
+            hide_chat_content = True
+            return render_template("chat.html", user=current_user,
+                                                hide_chat_content=hide_chat_content,
+                                                room=None,
+                                                other_user=None)
         else:
             return redirect(url_for('home'))
     else:

@@ -34,7 +34,7 @@
                 
                 <!--Messages-->
                 <li>
-                    <a href="{{ url_for('messages') }}">
+                    <a href="{{ url_for('chat_page', chat_id=current_user.id) }}">
                         <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
                     </a>
                 </li>

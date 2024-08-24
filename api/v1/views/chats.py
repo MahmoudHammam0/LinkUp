@@ -45,7 +45,7 @@ def get_messages_for_chat(chat_id):
 
 @app_views.route('/chats', methods=["POST"])
 def create_chat():
-    "create a new chat and save to storage"
+    "create a new chat and save to storage or return chat if it already exists"
     chat_data = request.get_json()
     if not chat_data:
         abort(400, "Not A Valid Json")

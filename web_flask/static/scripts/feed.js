@@ -651,9 +651,10 @@ $(document).ready(function() {
             url: `http://localhost:5001/api/v1/users/${userId}/follow/${followUserId}`,
             method: 'POST',
             success: function() {
-                // Update the button after following the user
+                // Update the button after following the user: follow -> following
                 followButton.removeClass('follow-button').addClass('unfollow-button').text('Following')
     
+                // Update the number of following
                 $.ajax({
                     url: `http://localhost:5001/api/v1/users/${userId}/following`,
                     type: 'GET',
@@ -671,6 +672,7 @@ $(document).ready(function() {
                     user_id: followUserId
                 };
         
+                // Create a new chat when following for the first time
                 $.ajax({
                     url: "http://localhost:5001/api/v1/chats",
                     method: "POST",
@@ -678,7 +680,6 @@ $(document).ready(function() {
                     data: JSON.stringify(requestData),
                     success: function(res) {
                         console.log("chat created successfully", res);
-                        window.location.href = `/chat/${res.id}`;
                     }
                 })
             },
@@ -697,7 +698,7 @@ $(document).ready(function() {
                 // Change button back to "Follow"
                 unfollowButton.removeClass('unfollow-button').addClass('follow-button').text('Follow');
 
-                // Update followers count
+                // Update following count
                 $.ajax({
                     url: `http://localhost:5001/api/v1/users/${userId}/following`,
                     type: 'GET',
