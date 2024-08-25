@@ -178,6 +178,19 @@ $(document).ready(function() {
                             thumbsup = "../static/images/thumbsup-symbol.png";
                             likeClass = "likes";
                         }
+
+                        // Display the likes counter based on the number of likes
+                        let likeText = '';
+                        if (post.likes_no > 0) {
+                            likeText = post.likes_no === 1 ? '1 Like' : `${post.likes_no} Likes`;
+                        }
+
+                        // Display the comments counter based on the number of comments
+                        let commentText = '';
+                        if (post.comments_no > 0) {
+                            commentText = post.comments_no === 1 ? '1 Comment' : `${post.comments_no} Comments`;
+                        }
+
                         const postItem = $(`
                             <div class="post-item" data-id="${post.id}">
                                 <div class="post-header">
@@ -192,10 +205,17 @@ $(document).ready(function() {
                                 <div class="post-content">
                                     <p class="content-text">${post.content}</p>
                                 </div>
-                                <div class="likes-counter">
-                                    <img class="like-symbol" src="../static/images/like_symbol.png">
-                                    <span>${post.likes_no} Likes</span>
-                                </div>
+                                ${(post.likes_no > 0 || post.comments_no > 0) ? `
+                                    <div class="likes-counter">
+                                        ${post.likes_no > 0 ? `
+                                            <img class="like-symbol" src="../static/images/like_symbol.png">
+                                            <span class="likes_no"  id="likes_no">${likeText}</span>
+                                        ` : ''}
+                                        ${post.comments_no > 0 ? `
+                                            <span class="comments_no">${commentText}</span>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
                                 <div class="post-buttons">
                                     <button class="${likeClass}">
                                         <img class="thumbsup-symbol" src="${thumbsup}">
@@ -225,8 +245,12 @@ $(document).ready(function() {
     });
 
     // Displays the comments section when you click on the comment button
-    $('.posts').on('click', '.comment', function() {
+    $('.posts').on('click', '.comment, .comments_no', function() {
         const postItem = $(this).closest('.post-item');
+
+        // Add id to these elements so we can click on it to hide the comments 
+        postItem.find('.comment').attr('id', 'hide-comments');
+        postItem.find('.comments_no').attr('id', 'hide-comments');
     
         if (postItem.find('input').length === 0) {
             postItem.append(`
@@ -239,7 +263,7 @@ $(document).ready(function() {
                     <form id="comment-form">
                         <div class="input-container">
                             <input class="comment-content" type="text" placeholder="Write a comment...">
-                            <input type="submit" value=">">
+                            <input type="submit" value="➜">
                         </div>
                     </form>
                 </div>`
@@ -274,6 +298,19 @@ $(document).ready(function() {
                 commentSection.html(commentSectionContent);
             }
         });
+    });
+
+    // Hide comments on second click on comment button or comments counter
+    $('.posts').on('click', '#hide-comments', function() {
+        const postItem = $(this).closest('.post-item');
+
+        // Remove the #hide-comments ID
+        postItem.find('.comment').removeAttr('id');
+        postItem.find('.comments_no').removeAttr('id');
+
+        // Hide the comments
+        postItem.find('.prev-comments').remove();
+        postItem.find('.comment-div').remove();
     });
 
     // Add comment
@@ -347,10 +384,59 @@ $(document).ready(function() {
             contentType: "application/json",
             data: JSON.stringify(requestData),
             success: function(res) {
-                const likeCounter = postItem.find('.likes-counter span');
-                likeCounter.html(`${res.like_no} Likes`);
+                const likeCounter = postItem.find('#likes_no');
+                const counterText = res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`;
+
+                // Check if .likes-counter exists, and handle accordingly
+                // If the counter is at 0, when liking for the first time
+
+                // If there are no comments or likes
+                if (postItem.find('.likes-counter').length === 0) {
+                    // Add the whole counter section
+                    postItem.find('.post-buttons').before(`
+                        <div class="likes-counter">
+                            <img class="like-symbol" src="../static/images/like_symbol.png">
+                            <span class="likes_no" id="likes_no">${counterText}</span>
+                        </div>
+                    `);
+                // if there are comments or likes
+                } else {
+                    // If there is a comments counter
+                    if (postItem.find('.comments_no').length !== 0) {
+                        // If there are no likes
+                        if (likeCounter.length === 0) {
+                            // prepend the likes counter to it
+                            postItem.find('.likes-counter').prepend(`
+                                <img class="like-symbol" src="../static/images/like_symbol.png">
+                                <span id="likes_no">${counterText}</span>
+                            `);
+                        // If there are likes
+                        } else {
+                            likeCounter.html(counterText);
+                        }
+                    // if there are likes
+                    } else {
+                        likeCounter.html(counterText);
+                    }
+                }
+                
+                // Change like text to blue
+                const likeText = postItem.find('.likes');
+                likeText.text('Liked').attr('id', 'liked');
+
                 const likeImage = postItem.find('.likes img');
-                likeImage.attr('src', '../static/images/blue-like-button-icon.png');
+
+                // Remove the element, update its attributes, and reinsert it
+                likeImage.remove(); // Remove the img element
+                
+                postItem.find('.likes').prepend(`
+                    <img class="new-class thumbsup-symbol" src="../static/images/blue-like-button-icon.png" id="blue-like">
+                `);
+
+                // Force redraw
+                const newLikeImage = postItem.find('.thumbsup-symbol');
+                newLikeImage.hide().show(0);
+
                 postItem.find('.likes').addClass('unlike').removeClass('likes');
             }
         });
@@ -366,10 +452,42 @@ $(document).ready(function() {
             method: "DELETE",
             dataType: "json",
             success: function(res) {
-                const likeCounter = postItem.find('.likes-counter span');
-                likeCounter.html(`${res.like_no} Likes`);
+                const likeCounter = postItem.find('#likes_no');
+                const counterText = res.like_no === 0 ? '' : (res.like_no === 1 ? '1 Like' : `${res.like_no} Likes`);
+
+                // Update likes counter if there are 0 likes
+                if (res.like_no === 0) {
+                    // if there isn't a comment counter (0 comments)
+                    if (postItem.find('.comments_no').length === 0) {
+                        const likesCounter = postItem.find('.likes-counter');
+                        // remove the whole counter section
+                        likesCounter.remove();
+                    // if the comments counter exist (1 or more comments)
+                    } else if (postItem.find('.comments_no').length !== 0) {
+                        // remove only the like counter
+                        postItem.find('.like-symbol').remove();
+                        postItem.find('#likes_no').remove();
+                    }
+                } else {
+                    likeCounter.html(counterText);
+                }
+
+                // Change like text to grey
+                const likeText = postItem.find('.unlike');
+                likeText.text('Like').attr('id', ' ');
+
                 const likeImage = postItem.find('.unlike img');
-                likeImage.attr('src', "../static/images/thumbsup-symbol.png");
+
+                // Remove the element, update its attributes, and reinsert it
+                likeImage.remove(); // Remove the img element
+                postItem.find('.unlike').prepend(`
+                    <img class="newClass thumbsup-symbol" src="../static/images/thumbsup-symbol.png" id="">
+                `);
+
+                // Force redraw
+                const newLikeImage = postItem.find('#blue-like');
+                newLikeImage.hide().show(0);
+
                 postItem.find('.unlike').addClass('likes').removeClass('unlike');
             }
         });

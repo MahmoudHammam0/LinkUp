@@ -463,7 +463,7 @@ $(document).ready(function() {
                 newLikeImage.hide().show(0);
 
                 postItem.find('.unlike').addClass('likes').removeClass('unlike');
-                }
+            }
         });
     });
 
@@ -473,7 +473,8 @@ $(document).ready(function() {
         const postItem = $(this).closest('.post');
 
         // Add id to these elements so we can click on it to hide the comments 
-        $(this).attr('id', 'hide-comments');
+        postItem.find('.comment-group').attr('id', 'hide-comments');
+        postItem.find('.comments_no').attr('id', 'hide-comments');
 
         if (postItem.find('input').length === 0) {
             postItem.append(`
@@ -532,8 +533,8 @@ $(document).ready(function() {
         const postItem = $(this).closest('.post');
 
         // Remove the #hide-comments ID
-        $(this).closest('.comment-group').removeAttr('id');
-        $(this).closest('.comments_no').removeAttr('id');
+        postItem.find('.comment-group').removeAttr('id');
+        postItem.find('.comments_no').removeAttr('id');
 
         // Hide the comments
         postItem.find('.prev-comments').remove();

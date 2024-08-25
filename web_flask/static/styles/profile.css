@@ -711,3 +711,152 @@ footer {
 footer p {
   margin: 0;
 }
+
+
+
+
+.likes-counter {
+  font-size: 0.9em;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 25px;
+}
+
+.likes-counter span {
+  display: block;
+  color: darkgrey;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.likes-counter .like-symbol {
+  width: 16px;
+  height: 16px;
+  align-self: center;
+  margin-right: 8px;
+}
+
+.comments_no,
+.hide-comments-no {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.likes_no {
+  position: absolute;
+  margin-left: 24px;
+}
+
+#liked {
+  filter: sepia(14.4) hue-rotate(200deg) saturate(4.5);
+  background: transparent;
+}
+
+#like {
+  filter: none;
+}
+
+
+
+.comment-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.comment-div .pic img,
+.prev-comments .pic img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-right: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.comment-div input[type="text"] {
+  border-radius: 20px;
+  border: none;
+  background-color: #dddddd52;
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  padding-left: 14px;
+  margin-right: 6px;
+}
+
+.comment-div input[type="text"]:focus {
+  border: 1px solid #97979752;
+}
+
+.comment-div input[type="submit"] {
+  border: none;
+  background-color: #7a51a370;
+  color: #fff;
+  font-size: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 36px;
+}
+
+.comment-div input[type="submit"]:hover {
+  background: linear-gradient(200deg, #623b88 -50%, #dfcfef 80%);
+}
+
+.comment-div form {
+  flex: 1;
+}
+
+.comment-div .input-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.comment-div input:focus {
+  outline: none;
+}
+
+
+.prev-comments {
+  border-top: 1px solid #efecf3;
+  padding-top: 8px;
+}
+
+.comment-item {
+  display: block;
+  background-color: #F0F2F5;
+  padding: 12px 19px;
+  border-radius: 24px;
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: normal;
+}
+
+.post-comments {
+  display: flex;
+  justify-content: flex-start;
+  /*align-items: center;*/
+}
+
+.post-comments .pic {
+  width: 37px;
+  height: 34px;
+  box-shadow: none;
+  margin-top: 18px;
+  align-self: flex-start;
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+.comment-writer {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}

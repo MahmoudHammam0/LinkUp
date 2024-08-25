@@ -418,7 +418,8 @@ main {
 .post-photo img {
     border-radius: 20px;
     object-fit: cover;
-    width: 626px;
+    /*width: 626px;*/
+    width: 100%;
     max-height: 400px;
     margin-bottom: 10px;
 }
@@ -550,6 +551,7 @@ main {
     margin-right: 6px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    vertical-align: middle;
   }
   
   .comment-div input[type="text"] {
