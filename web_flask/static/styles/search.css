@@ -64,8 +64,13 @@ nav ul li a {
   filter: brightness(1.8);
 }
 
-.nav-icon.active {
+.nav-icon.active{
   filter: brightness(2.2);
+}
+
+.home-icon:hover img {
+  content: url(../images/home-icon-active.png);
+  filter: none;
 }
 
 #profile-icon {
@@ -73,12 +78,27 @@ nav ul li a {
   filter: sepia(9.4) hue-rotate(249deg) saturate(6.5);
 }
 
+.profile-icon:hover #profile-icon {
+  content: url(../images/profile-icon-active.png);
+  filter: none;
+}
+
 #message-icon {
-  filter: contrast(56%);
+  filter: contrast(43%);
+}
+
+.message-icon:hover img {
+  content: url(../images/message-icon-active.png);
+  filter: none;
 }
 
 #logout-icon {
   filter: contrast(113%);
+}
+
+.logout-icon:hover img {
+  content: url(../images/logout-icon-active.png);
+  filter: none;
 }
 
 

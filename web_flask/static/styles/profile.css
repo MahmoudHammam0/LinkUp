@@ -43,17 +43,37 @@ header {
   filter: brightness(2.2);
 }
 
+.home-icon:hover img {
+  content: url(../images/home-icon-active.png);
+  filter: none;
+}
+
 #profile-icon {
   filter: brightness(1.9);
   filter: sepia(9.4) hue-rotate(249deg) saturate(6.5);
+}
+
+.profile-icon.active #profile-icon {
+  content: url(../images/profile-icon-active.png);
+  filter: none;
 }
 
 #message-icon {
   filter: contrast(43%);
 }
 
+.message-icon:hover img {
+  content: url(../images/message-icon-active.png);
+  filter: none;
+}
+
 #logout-icon {
   filter: contrast(113%);
+}
+
+.logout-icon:hover img {
+  content: url(../images/logout-icon-active.png);
+  filter: none;
 }
 
 .logo img {

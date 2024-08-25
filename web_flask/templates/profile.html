@@ -25,28 +25,28 @@
           <ul>
               <!--Feed-->
               <li>
-                <a href="{{ url_for('home') }}">
+                <a class="home-icon" href="{{ url_for('home') }}">
                     <img class="nav-icon" src="../static/images/home-icon.png">
                 </a>
               </li>
               
               <!--Profile-->
               <li>
-                  <a href="{{ url_for('profile', user_id=current_user.id) }}">
+                  <a class="profile-icon active" href="{{ url_for('profile', user_id=current_user.id) }}">
                       <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
                   </a>
               </li>
               
               <!--Messages-->
               <li>
-                  <a href="{{ url_for('chat_page', chat_id=current_user.id) }}">
+                  <a class="message-icon" href="{{ url_for('chat_page', chat_id=current_user.id) }}">
                       <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
                   </a>
               </li>
               
               <!--Logout-->
               <li>
-                  <a href="{{ url_for('logout') }}">
+                  <a class="logout-icon" href="{{ url_for('logout') }}">
                       <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png">
                   </a>
               </li>
