@@ -58,29 +58,37 @@
 
 
   <div class="container" data-id="{{ current_user.id }}">
+
     <div class="profile-header" data-id="{{ user.id }}">
+
       <div class="cover-photo">
-      {% if current_user.id == user.id %}
+        {% if current_user.id == user.id %}
         <div id="edit-cover">
           <img src="../static/images/camera.png">
           <h6>Edit cover photo</h6>
           <input type="file" id="cover-update" accept="image/*">
         </div>
-      {% endif %}
+        {% endif %}
         <img src="{{ user.cover_photo }}" alt="Profile Picture" />
       </div>
+
+
+
       <div class="profile-info">
+
         <div class="profile-pic">
           <img src="{{ user.profile_photo }}" alt="Profile Picture" />
-        {% if current_user.id == user.id %}
+          {% if current_user.id == user.id %}
           <div id="edit-photo"><img src="../static/images/camera.png"></div>
           <input type="file" id="photo-update" accept="image/*">
-        {% endif %}
+          {% endif %}
         </div>
+
         <div class="profile-details">
           <h1>{{ user.name }}</h1>
           <p>@{{ user.username }}</p>
         </div>
+
         <div class="profile-buttons">
           {% if current_user.id != user.id %}
             {% if user not in current_user.following %}
@@ -100,8 +108,12 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
+
+
+
     <div class="post-grid">
       <div class="bio">
         <div class="info">
@@ -111,14 +123,24 @@
           <h4>Location</h4>
           <h4>Phone</h4>
         </div>
+
+        <div class="album">
+          <h2>Photos</h2>
+          <div class="photos">
+
+          </div>
+        </div>
       </div>
+      
       <div class="posts">
       </div>
     </div>
-    <div class="footer">
-      <p>&copy; 2024 LinkUp</p>
-    </div>
   </div>
 
+
+
+  <footer>
+    <p>&copy; 2024 LinkUp</p>
+  </footer>
 </body>
 </html>

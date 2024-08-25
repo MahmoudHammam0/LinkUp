@@ -7,6 +7,9 @@ $(document).ready(function() {
     let likeClass;
     let isFollowing = $('.unfollow-button').text() === 'Following';
 
+    // Set CSS variable --info-height to the height of .info element (for album section to be able to acces info height in the css)
+    document.documentElement.style.setProperty('--info-height', document.querySelector('.info').offsetHeight + 'px');
+
     // Function to format the date
     function formateDate(date) {
         const currntYear = new Date().getFullYear();
@@ -97,6 +100,25 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Fill the album section with the photos from previous posts
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${currentUserId}/posts`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            res.forEach((post) => {
+                if (post.picture) {
+                    const photoItem = $(`
+                        <div class="photo-item">
+                            <img src="${post.picture}" alt="post picture" />
+                        </div>
+                    `);
+                    $('.photos').append(photoItem);
+                }
+            });
+        }
+    });  
 
     const openFormBtn = document.getElementById('edit-profile');
     const overlay = document.getElementById('overlay');
