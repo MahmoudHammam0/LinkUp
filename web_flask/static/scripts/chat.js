@@ -114,47 +114,29 @@ $(document).ready(function() {
         }
     });
 
-
     // Populate the chat list of suggested chats with the following
     $.ajax({
-        url: `http://localhost:5001/api/v1/users/${currentUserId}/following`, // Endpoint to get users following
+        url: `http://localhost:5001/api/v1/chats/${currentUserId}/chats`, // Endpoint to get current user chats
         method: 'GET',
         success: function(data) {
             const chatList = $('.chat-list');
             chatList.empty(); // Clear existing list
-            data.forEach(user => {
+            data.forEach(chat => {
                 const chatItem = `
-                    <div class="chat-item" data-receiver-id="${user.id}">
-                        <img src="${user.profile_photo}" alt="User Photo" class="chat-user-photo">
-                        <span>${user.name}</span>
+                    <div class="chat-item" data-chat-id="${chat.id}">
+                        <img src="${chat.user_photo}" alt="User Photo" class="chat-user-photo">
+                        <span>${chat.user_name}</span>
                     </div>
                 `;
 
-                // Prevents from adding the current user to the chat list
-                if (user.id !== currentUserId) {
-                    chatList.append(chatItem);
-                }
+                // add the chatItem to the chat list
+                chatList.append(chatItem);
             });
 
             // Attach click event handler to each chat item, to open the chat
             $('.chat-item').on('click', function() {
-                const rcvrId = $(this).data('receiver-id');
-                requestData = {
-                    auth_user_id: currentUserId,
-                    user_id: rcvrId
-                };
-
-                // When clicking on a chat, it creates a new one if it doesn't exist, or opens it if it exists already
-                $.ajax({
-                    url: "http://localhost:5001/api/v1/chats",
-                    method: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(requestData),
-                    success: function(res) {
-                        console.log("chat created successfully", res);
-                        window.location.href = `/chat/${res.id}`;
-                    }
-                })
+                const chatId = $(this).data('chat-id');
+                window.location.href = `/chat/${chatId}`;
             });
         },
         error: function() {

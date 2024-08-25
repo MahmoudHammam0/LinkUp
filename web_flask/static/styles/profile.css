@@ -1,54 +1,36 @@
 * {
-    box-sizing: border-box;
-  }
+  box-sizing: border-box;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  background: linear-gradient(40deg, #ded3eb53 -15%, #e1dbe744 80%);
+  position: relative;
+  margin: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  bottom: -183px;
+  left: 10%;
+  width: 1205px;
+  height: 1036px;
+  background: url(../images/logo_cut.png) no-repeat;
+  background-size: cover;
+  opacity: 0.06;
+  z-index: -1;
+  pointer-events: none;
+  transform: rotate(-30deg);
+  filter: blur(7px);
 }
 
 /* Header styles */
 header {
   background-color: #ffffff;
-  /*padding: 10px 150px;*/
+  padding: 10px 150px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.logo img {
-  width: 24px;
-  margin-left: 155px;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-nav input {
-  padding: 5px 10px;
-  border-radius: 20px;
-  border: 1px solid #b1b1b157;
-  width: 300px;
-  background-color: #d9c0de21;
-}
-
-nav ul {
-  list-style-type: none;
-  display: flex;
-  margin-right: 90px;
-}
-
-nav ul li {
-  margin-left: 20px;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: #895ea8;
-  font-size: 14px;
-  font-weight: 600;
 }
 
 .nav-icon {
@@ -67,11 +49,51 @@ nav ul li a {
 }
 
 #message-icon {
-  filter: contrast(56%);
+  filter: contrast(43%);
 }
 
 #logout-icon {
   filter: contrast(113%);
+}
+
+.logo img {
+  width: 24px;
+  margin-left: 100px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav input {
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 1px solid #b1b1b157;
+  width: 400px;
+  background-color: white;
+  height: 35px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  margin-right: 90px;
+}
+
+nav ul li {
+  margin-left: 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #895ea8;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 
@@ -127,6 +149,8 @@ nav ul li a {
     position: relative;
     z-index: 2;
     padding: 0 20px 20px 20px;
+    position: sticky;
+    top: 0;
   }
 
 .profile-pic {
@@ -165,6 +189,17 @@ nav ul li a {
 
 .profile-buttons {
   margin-top: 10px;
+}
+
+.profile-buttons .unfollow-button {
+  background-color: #ddd;
+  color: #2e2d2d;
+}
+
+.profile-buttons .unfollow-button:hover {
+  background-color: #c75151;
+  color: #fff;
+  content: "Unfollow";
 }
 
 .profile-buttons button {
@@ -310,7 +345,7 @@ nav ul li a {
 }
 
 .post-content {
-  margin: 85px 0 15px 0;
+  margin: 85px 0 5px 0;
   flex: 1;
   overflow: hidden;
 }
@@ -318,10 +353,15 @@ nav ul li a {
 .content-text {
   padding: 15px;
   margin: 0 15px;
+  white-space: pre-wrap;
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #000000cf;
 }
 
 .post-image {
-  margin: 0;
+  margin-bottom: 15px;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -333,7 +373,8 @@ nav ul li a {
 }
 
 .info {
-  position: relative;
+  position: sticky;
+  top: 0;
   width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
   border-radius: 5px;
@@ -341,6 +382,7 @@ nav ul li a {
   background-color: #fff;
   margin-bottom: 20px;
   padding: 20px;
+  border-radius: 20px;
 }
 
 h2 {
@@ -484,6 +526,7 @@ h6 {
   display: block;
   color: darkgrey;
   font-weight: 400;
+  font-size: 13px;
 }
 
 .likes-counter .like-symbol {

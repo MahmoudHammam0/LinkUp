@@ -14,6 +14,13 @@ $(document).ready(function() {
         return date.toLocaleDateString('en-US', options);
     }
 
+    $("textarea").each(function () {
+        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+      }).on("input", function () {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+      });
+
     // The current user's id
     const userId = $('.stats').data('user-id');
 
@@ -89,7 +96,7 @@ $(document).ready(function() {
     $(window).on('scroll', function() {
         const scrollNavHTML = `
             <div class="scroll-nav">
-                    <a href="#">
+                    <a href="/">
                         <img class="nav-icon" src="../static/images/home-icon.png" alt="Feed Icon">
                         <h2>Home</h2>
                     </a>
@@ -99,12 +106,12 @@ $(document).ready(function() {
                         <h2>Profile</h2>
                     </a>
 
-                    <a href="#">
+                    <a href="/chat/${currentUserObject.id}">
                         <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png" alt="Messages Icon">
                         <h2>Messages</h2>
                     </a>
 
-                    <a href="#">
+                    <a href="/logout">
                         <img class="nav-icon" id="logout-icon" src="../static/images/logout-icon.png" alt="Logout Icon">
                         <h2>Logout</h2>
                     </a>
@@ -128,7 +135,9 @@ $(document).ready(function() {
     // Create Post
     $('.post-form button').on('click', function(event) {
         event.preventDefault();
-
+        $('textarea').each(function() {
+            this.setAttribute("style", "height:" + 52 + "px;overflow-y:hidden;");
+        })
         const content = $('textarea[name="content"]').val();
         const userId = $('.post-form').data('user-id');
         const photo = $('#file-upload')[0].files[0];
@@ -156,6 +165,10 @@ $(document).ready(function() {
             success: function(postResponse) {
                 console.log('Post created successfully!', postResponse);
                 
+                // Clear the textarea and the uploaded image
+                $('textarea[name="content"]').val('');
+                $('.image-preview').html('');
+                
                 // Base Attributes for the Like button
                 thumbsup = "../static/images/thumbsup-symbol.png";
                 likeClass = "likes";
@@ -176,7 +189,7 @@ $(document).ready(function() {
                         const newPost = `
                             <article class="post" data-id="${postResponse.id}">
                                 <header>
-                                    <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">
+                                    <img src="${currentUserObject.profile_photo}" alt="User Avatar" onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">
                                     <div class="user-info">
                                         <h3 onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">${userResponse.name}</h3>
                                         <h5>${formattedDate}</h5>
@@ -199,10 +212,6 @@ $(document).ready(function() {
 
                         // Prepend the new post to the feed
                         $('.feed').children().first().after(newPost);
-
-                        // Clear the textarea and the uploaded image
-                        $('textarea[name="content"]').val('');
-                        $('.image-preview').html('');
                     },
                     error: function(xhr, status, error) {
                         console.error('Failed to fetch user details.', xhr.responseText);
@@ -269,7 +278,7 @@ $(document).ready(function() {
                     thumbsup = "../static/images/blue-like-button-icon.png";
                     likeClass = "unlike";
                     likeId = "blue-like";
-                    textId = "liked"
+                    textId = "liked";
                 } else {
                     thumbsup = "../static/images/thumbsup-symbol.png";
                     likeClass = "likes";
@@ -292,9 +301,9 @@ $(document).ready(function() {
                 postsHTML += `
                     <article class="post" data-id="${post.id}">
                         <header>
-                            <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">
+                            <img src="${post.user_photo}" alt="User Avatar" onclick="window.location.href='/profile/${post.user_id}';" style="cursor: pointer;">
                             <div class="user-info">
-                                <h3 onclick="window.location.href='${profileUrl}';" style="cursor: pointer;">${post.user_name}</h3>
+                                <h3 onclick="window.location.href='/profile/${post.user_id}';" style="cursor: pointer;">${post.user_name}</h3>
                                 <h5>${formatDate(post.created_at)}</h5>
                             </div>
                         </header>
@@ -575,7 +584,7 @@ $(document).ready(function() {
                                 </div>`;
                             });
     
-                            $(this).find('.comment-content').val(''); // Clear the comment input
+                            $('.comment-content').val(''); // Clear the comment input
                             commentSection.html(commentSectionContent);
 
                             // Update comment counter
@@ -626,6 +635,8 @@ $(document).ready(function() {
     
                     for (let i = 0; i < allUsers.length; i++) {
                         let userIsFollowing = false;
+
+                        if (allUsers[i].id === userId) { continue; }
     
                         // Check if current user is in the following list
                         for (let j = 0; j < followingUsers.length; j++) {
@@ -648,8 +659,8 @@ $(document).ready(function() {
                         const user = suggestions[i];
                         suggestionsList.append(`
                             <li>
-                                <img src="../static/images/2.jpg">
-                                <span>${user.name} <h5>1 Mutual Friend</h5> </span>
+                                <img src="${user.profile_photo}" data-id="${user.id}">
+                                <span data-id="${user.id}">${user.name} <h5>1 Mutual Friend</h5> </span>
                                 <button class="follow-button" data-user-id="${user.id}">Follow</button>
                             </li>
                         `);
@@ -657,6 +668,13 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+
+    $(document).on('click', '.suggestions span, img', function() {
+        suggestedUserId = $(this).data('id');
+        console.log("event triggered");
+        window.location.href = `/profile/${suggestedUserId}`;
     });
 
 

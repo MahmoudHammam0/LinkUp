@@ -26,6 +26,27 @@ def get_specific_chat(chat_id):
         abort(404)
 
 
+@app_views.route('/chats/<user_id>/chats', methods=["GET"])
+def get_chats_for_user(user_id):
+    "return all chats that a user is part of"
+    user = storage.get(User, user_id)
+    if user:
+        chats = []
+        for chat in user.chats:
+            chat_dict = chat.to_dict()
+            for user in chat.users:
+                if user_id != user.id:
+                    other_user = user
+            chat_dict['user_id'] = other_user.id
+            chat_dict['user_name'] = other_user.name
+            chat_dict['user_photo'] = other_user.profile_photo
+            chats.append(chat_dict)
+        return jsonify(chats)
+    else:
+        abort(404)
+
+
+
 @app_views.route('/chats/<chat_id>/messages', methods=["GET"])
 def get_messages_for_chat(chat_id):
     "return all messsages for a specific chat"

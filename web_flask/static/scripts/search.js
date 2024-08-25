@@ -92,7 +92,7 @@ $(document).ready(function() {
                         $postsContainer.append(
                             `<article class="post" data-id="${post.id}">
                                 <header>
-                                    <img src="../static/images/4.jpg" alt="User Avatar" onclick="window.location.href='http://localhost:5000/profile/${user.id}';" style="cursor: pointer;">
+                                    <img src="${post.user.profile_photo}" alt="User Avatar" onclick="window.location.href='http://localhost:5000/profile/${user.id}';" style="cursor: pointer;">
                                     <div class="user-info">
                                         <h3 onclick="window.location.href='http://localhost:5000/profile/${user.id}';" style="cursor: pointer;">${user.name}</h3>
                                         <h5>${formatDate(post.created_at)}</h5>

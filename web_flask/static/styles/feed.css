@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -31,9 +35,9 @@ body::before {
 
 /* Header styles */
 header {
-    /*background-color: #ffffff;*/
+    background-color: #ffffff;
     padding: 10px 150px;
-    /*box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .nav-icon {
@@ -208,7 +212,7 @@ main {
 .feed {
     flex-grow: 1;
     margin: 0 20px;
-    min-height: 617px;
+    min-height: 742px;
     width: 55%;
 }
 
@@ -228,6 +232,8 @@ main {
     border-radius: 4px;
     resize: vertical;
     font-family: 'Roboto', sans-serif;
+    resize: none;
+    overflow: hidden;
 }
 
 .post-form textarea::placeholder {
@@ -509,8 +515,8 @@ main {
     padding: 15px 5px 15px 5px;
   }
   
-  .comment-div .pic,
-  .prev-comments .pic {
+  .comment-div .pic img,
+  .prev-comments .pic img {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -612,6 +618,8 @@ main {
     width: 25%;
     height: max-content;
     border-radius: 20px;
+    position: sticky;
+    top: 20px;
 }
 
 .suggestions h3 {
@@ -630,6 +638,14 @@ main {
     align-items: center;
     margin-bottom: 10px;
     justify-content: space-between;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.suggestions li:hover {
+    background-color: #ebebeb;
+    color: #fff;
+    cursor: pointer;
 }
 
 .suggestions li img {
@@ -690,7 +706,5 @@ footer {
     padding: 20px;
     background-color: #ffffff;
     margin-top: 20px;
-    position: relative;
-    bottom: 0;
     width: -webkit-fill-available;
 }

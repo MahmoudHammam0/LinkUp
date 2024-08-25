@@ -31,14 +31,14 @@
                 
                 <!--Profile-->
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('profile', user_id=current_user.id) }}">
                         <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
                     </a>
                 </li>
                 
                 <!--Messages-->
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('chat_page', chat_id=current_user.id) }}">
                         <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
                     </a>
                 </li>

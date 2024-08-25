@@ -24,7 +24,7 @@
             <ul>
                 <!--Feed-->
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('home') }}">
                         <img class="nav-icon" src="../static/images/home-icon.png">
                     </a>
                 </li>
@@ -60,7 +60,7 @@
         </script>
         
         <aside class="profile-card">
-            <img class="profile-photo" src="../static/images/1.jpg" alt="Profile Picture">
+            <img class="profile-photo" src="{{ current_user.profile_photo }}" alt="Profile Picture">
             <h2>{{ user.name }}</h2>
             <p>Web Developer</p>
             <div class="stats" data-user-id="{{ user.id }}">

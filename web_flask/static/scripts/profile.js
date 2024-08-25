@@ -5,6 +5,7 @@ $(document).ready(function() {
     let currentUserObject = ''
     let thumbsup;
     let likeClass;
+    let isFollowing = $('.unfollow-button').text() === 'Following';
 
     function formateDate(date) {
         const currntYear = new Date().getFullYear();
@@ -357,6 +358,66 @@ $(document).ready(function() {
             }
         })
     });
+
+    // Follow Button
+    $(document).on('click', '.follow-button', function() {
+        const followButton = $(this);
+        const followUserId = userId;
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${currentUserId}/follow/${followUserId}`,
+            method: 'POST',
+            success: function() {
+                // Update the button after following the user: follow -> following
+                followButton.removeClass('follow-button').addClass('unfollow-button').text('Following')
+                requestData = {
+                    auth_user_id: currentUserObject.id,
+                    user_id: followUserId
+                };
+        
+                // Create a new chat when following for the first time
+                $.ajax({
+                    url: "http://localhost:5001/api/v1/chats",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function(res) {
+                        console.log("chat created successfully", res);
+                        isFollowing = true;
+                    }
+                })
+            },
+        });
+    });
+
+    // Unfollow Button
+    $(document).on('click', '.unfollow-button', function() {
+        const unfollowButton = $(this);
+        const unfollowUserId = userId;
+    
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${currentUserId}/unfollow/${unfollowUserId}`,
+            method: 'POST',
+            success: function() {
+                // Change button back to "Follow"
+                unfollowButton.removeClass('unfollow-button').addClass('follow-button').html('Follow');
+                isFollowing = false;
+            }
+
+        });
+    });
+
+    $('.unfollow-button').hover(
+        function() {
+          if (isFollowing) {
+            $(this).text('Unfollow');  // On hover
+          }
+        },
+        function() {
+          if (isFollowing) {
+            $(this).text('Following');  // On hover out
+          }
+        }
+    );
 
     // $('.cover-photo').on('click', function() {
     //     overlay.style.display = 'flex';

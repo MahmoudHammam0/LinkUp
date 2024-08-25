@@ -32,14 +32,14 @@
               
               <!--Profile-->
               <li>
-                  <a href="#">
+                  <a href="{{ url_for('profile', user_id=current_user.id) }}">
                       <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
                   </a>
               </li>
               
               <!--Messages-->
               <li>
-                  <a href="#">
+                  <a href="{{ url_for('chat_page', chat_id=current_user.id) }}">
                       <img class="nav-icon" id="message-icon" src="../static/images/message-icon.png">
                   </a>
               </li>
@@ -83,7 +83,11 @@
         </div>
         <div class="profile-buttons">
           {% if current_user.id != user.id %}
-            <button>Follow</button>
+            {% if user not in current_user.following %}
+              <button class="follow-button">Follow</button>
+            {% else %}
+              <button class="unfollow-button">Following</button>
+            {% endif %}
             <button class="messages">Message</button>
           {% else %}
           <div id="edit-profile">
