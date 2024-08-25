@@ -7,6 +7,7 @@ $(document).ready(function() {
     let likeClass;
     let isFollowing = $('.unfollow-button').text() === 'Following';
 
+    // Function to format the date
     function formateDate(date) {
         const currntYear = new Date().getFullYear();
         const objectDate = new Date(date);
@@ -45,10 +46,12 @@ $(document).ready(function() {
         }
     });
 
+    // On click for edit cover photo button
     $('#edit-cover').on('click', function() {
         document.getElementById('cover-update').click();
     });
 
+    // Update cover photo
     $('#cover-update').on('change', function(event) {
         const photo = this.files[0];
         if (photo) {
@@ -69,10 +72,12 @@ $(document).ready(function() {
         }
     });
 
+    // On click for edit profile photo button
     $('#edit-photo').on('click', function() {
         document.getElementById('photo-update').click();
     });
 
+    // Update profile photo
     $('#photo-update').on('change', function(event) {
         const photo = this.files[0];
         if (photo) {
@@ -96,6 +101,7 @@ $(document).ready(function() {
     const openFormBtn = document.getElementById('edit-profile');
     const overlay = document.getElementById('overlay');
 
+    // Edit profile: Opens the form to edit the profile info
     if (openFormBtn && overlay) {
         openFormBtn.addEventListener('click', () => {
             overlay.style.display = 'flex';
@@ -119,6 +125,7 @@ $(document).ready(function() {
         });
     }
 
+    // Gets the current (logged in) user
     $.ajax({
         url: `http://localhost:5001/api/v1/users/${currentUserId}`,
         method: "GET",
@@ -128,6 +135,7 @@ $(document).ready(function() {
         }
     });
 
+    // Populates the profile page with the user's posts
     $.ajax({
         url: `http://localhost:5001/api/v1/users/${userId}`,
         method: "GET",
@@ -194,6 +202,7 @@ $(document).ready(function() {
         }
     });
 
+    // Displays the comments section when you click on the comment button
     $('.posts').on('click', '.comment', function() {
         const postItem = $(this).closest('.post-item');
     
@@ -245,6 +254,7 @@ $(document).ready(function() {
         });
     });
 
+    // Add comment
     $('.posts').on('submit', '#comment-form', function(event) {
         event.preventDefault();
     
@@ -300,6 +310,7 @@ $(document).ready(function() {
         }
     });
 
+    // Like button
     $('.posts').on('click', '.likes', function() {
         const postItem = $(this).closest('.post-item');
         const postId = postItem.data('id');
@@ -323,6 +334,7 @@ $(document).ready(function() {
         });
     });
 
+    // Unlike button
     $('.posts').on('click', '.unlike', function() {
         const postItem = $(this).closest('.post-item');
         const postId = postItem.data('id');
@@ -341,6 +353,7 @@ $(document).ready(function() {
         });
     });
 
+    // Opens the chat with the user
     $('.messages').on('click', function() {
         requestData = {
             auth_user_id: currentUserId,
@@ -406,18 +419,16 @@ $(document).ready(function() {
         });
     });
 
-    $('.unfollow-button').hover(
-        function() {
-          if (isFollowing) {
-            $(this).text('Unfollow');  // On hover
-          }
-        },
-        function() {
-          if (isFollowing) {
-            $(this).text('Following');  // On hover out
-          }
+    // Changes text from "following" to "unfollow" on hover
+    $(document).on('mouseenter', '.unfollow-button', function() {
+        if (isFollowing === true) {
+            $(this).text('Unfollow');  // Change text to 'Unfollow' on hover
         }
-    );
+    }).on('mouseleave', '.unfollow-button', function() {
+        if (isFollowing === true) {
+            $(this).text('Following');  // Change text back to 'Following' on hover out
+        }
+    });
 
     // $('.cover-photo').on('click', function() {
     //     overlay.style.display = 'flex';

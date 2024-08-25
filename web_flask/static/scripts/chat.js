@@ -19,33 +19,37 @@ $(document).ready(function() {
 
 
     // Populate the chat section with old messages stored in the database
-    $.ajax({
-        url: `http://localhost:5001/api/v1/chats/${roomId}/messages`,
-        method: "GET",
-        dataType: "json",
-        success: function(res) {
-            res.forEach((message) => {
-                const messageParagraph = $('<p>').text(message.content);
-                const messageDiv = $('<div>').addClass('message-div');
+    // Do that only when we open a chat (has room id), not for messages page
+    if (roomId && roomId !== 'None') {
+        $.ajax({
+            url: `http://localhost:5001/api/v1/chats/${roomId}/messages`,
+            method: "GET",
+            dataType: "json",
+            success: function(res) {
+                res.forEach((message) => {
+                    const messageParagraph = $('<p>').text(message.content);
+                    const messageDiv = $('<div>').addClass('message-div');
 
-                // Sent messages
-                if (message.sender_id === currentUserId) {
-                    messageParagraph.addClass('sent');
-                    messageDiv.append(messageParagraph);
-                    messageDiv.append(`<img src="${message.sender_img}">`);
-                    messageDiv.css('justify-content', 'flex-end');
-                // Rceived messages
-                } else {
-                    messageParagraph.addClass('received');
-                    messageDiv.append(`<img src="${message.sender_img}">`);
-                    messageDiv.append(messageParagraph);
-                    messageDiv.css('justify-content', 'flex-start');
-                }
+                    // Sent messages
+                    if (message.sender_id === currentUserId) {
+                        messageParagraph.addClass('sent');
+                        messageDiv.append(messageParagraph);
+                        messageDiv.append(`<img src="${message.sender_img}">`);
+                        messageDiv.css('justify-content', 'flex-end');
+                    // Rceived messages
+                    } else {
+                        messageParagraph.addClass('received');
+                        messageDiv.append(`<img src="${message.sender_img}">`);
+                        messageDiv.append(messageParagraph);
+                        messageDiv.css('justify-content', 'flex-start');
+                    }
 
-                $('.messages').append(messageDiv);
-            });
-        }
-    });
+                    $('.messages').append(messageDiv);
+                });
+            }
+        });
+    }
+    
 
 
     // Logic to send a message

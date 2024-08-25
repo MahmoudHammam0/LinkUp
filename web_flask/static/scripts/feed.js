@@ -14,12 +14,13 @@ $(document).ready(function() {
         return date.toLocaleDateString('en-US', options);
     }
 
+    // Auto-adjusts <textarea> height to fit content
     $("textarea").each(function () {
         this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-      }).on("input", function () {
+    }).on("input", function () {
         this.style.height = 0;
         this.style.height = (this.scrollHeight) + "px";
-      });
+    });
 
     // The current user's id
     const userId = $('.stats').data('user-id');
@@ -636,6 +637,7 @@ $(document).ready(function() {
                     for (let i = 0; i < allUsers.length; i++) {
                         let userIsFollowing = false;
 
+                        // Skips the current user
                         if (allUsers[i].id === userId) { continue; }
     
                         // Check if current user is in the following list
@@ -670,7 +672,7 @@ $(document).ready(function() {
         }
     });
 
-
+    // Redirects to the user's profile when clicking on the image
     $(document).on('click', '.suggestions span, img', function() {
         suggestedUserId = $(this).data('id');
         console.log("event triggered");
