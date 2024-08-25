@@ -40,6 +40,19 @@ def get_chats_for_user(user_id):
             chat_dict['user_id'] = other_user.id
             chat_dict['user_name'] = other_user.name
             chat_dict['user_photo'] = other_user.profile_photo
+
+            # Get the latest message
+            latest_message = None
+            for message in chat.messages:
+                if latest_message is None or message.created_at > latest_message.created_at:
+                    latest_message = message
+
+            # Add the latest message to the chat dictionary
+            if latest_message:
+                chat_dict['latest_message'] = latest_message.to_dict()
+            else:
+                chat_dict['latest_message'] = None
+
             chats.append(chat_dict)
         return jsonify(chats)
     else:

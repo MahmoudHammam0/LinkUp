@@ -62,7 +62,7 @@
         <aside class="profile-card">
             <img class="profile-photo" src="{{ current_user.profile_photo }}" alt="Profile Picture">
             <h2>{{ user.name }}</h2>
-            <p>Web Developer</p>
+            <p>@{{ user.username }}</p>
             <div class="stats" data-user-id="{{ user.id }}">
                 <div>
                     <h2 id="posts-count">Posts: </h2>
