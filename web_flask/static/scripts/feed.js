@@ -660,13 +660,36 @@ $(document).ready(function() {
                     suggestionsList.empty();
                     for (let i = 0; i < suggestions.length; i++) {
                         const user = suggestions[i];
-                        suggestionsList.append(`
-                            <li>
-                                <img src="${user.profile_photo}" data-id="${user.id}">
-                                <span data-id="${user.id}">${user.name} <h5>1 Mutual Friend</h5> </span>
-                                <button class="follow-button" data-user-id="${user.id}">Follow</button>
-                            </li>
-                        `);
+
+                        // Get the number of mutual friends
+                        let mutualFriends;
+                        $.ajax({
+                            url: `http://localhost:5001/api/v1/users/${userId}/mutualswith/${user.id}`,
+                            method: 'GET',
+                            success: function(res) {
+                                mutualFriends = res['count'];
+
+                                // Determine the mutual friends text
+                                let mutualFriendsText = '';
+                                if (mutualFriends === 0) {
+                                    mutualFriendsText = 'No Mutual Friends';
+                                } else if (mutualFriends === 1) {
+                                    mutualFriendsText = '1 Mutual Friend';
+                                } else {
+                                    mutualFriendsText = `${mutualFriends} Mutual Friends`;
+                                }
+
+                                suggestionsList.append(`
+                                    <li>
+                                        <img src="${user.profile_photo}" data-id="${user.id}">
+                                        <span data-id="${user.id}">${user.name} <h5>${mutualFriendsText}</h5> </span>
+                                        <button class="follow-button" data-user-id="${user.id}">Follow</button>
+                                    </li>
+                                `);
+                            }
+                        });
+
+                        
                     }
                 }
             });

@@ -76,9 +76,19 @@ header {
   filter: none;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+}
+
 .logo img {
-  width: 24px;
-  margin-left: 100px;
+  width: 30px;
+  margin-left: 90px;
+}
+
+.logo img:hover {
+  cursor: pointer;
+  width: 32px;
 }
 
 nav {

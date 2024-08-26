@@ -83,9 +83,12 @@ def chat_page(chat_id):
 @app.route('/search/<keywords>', methods=['GET'])
 def search_results(keywords):
     "Search page"
-    # Split keywords into a list based on spaces
-    query_list = keywords.split(' ')
-    return render_template('search.html', queries=query_list, current_user=current_user)
+    if current_user.is_authenticated:
+        # Split keywords into a list based on spaces
+        query_list = keywords.split(' ')
+        return render_template('search.html', queries=query_list, current_user=current_user)
+    
+    return render_template("home.html")
 
 
 @app.route('/logout')
@@ -106,6 +109,11 @@ def load_user(user_id):
 def not_found(error):
     "Page Not Found"
     return jsonify({"Error": error.description}), 400
+
+
+@app.errorhandler(404) 
+def not_found(e): 
+    return render_template("404.html") 
 
 
 

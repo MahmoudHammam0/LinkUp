@@ -178,3 +178,23 @@ def unfollow_user(user_id, user_to_unfollow_id):
     user.save()
 
     return jsonify({"message": "User unfollowed successfully"}), 201
+
+
+@app_views.route("/users/<user_id>/mutualswith/<user_to_follow_id>", methods=["GET"])
+def get_mutual_friends(user_id, user_to_follow_id):
+    "return number of mutual friends between two users"
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+        
+    user_to_follow = storage.get(User, user_to_follow_id)
+    if not user_to_follow:
+        abort(404)
+    
+    count = 0
+    for usr in user.following:
+        for u in user_to_follow.following:
+            if user == u:
+                count += 1
+
+    return jsonify({"count": count})

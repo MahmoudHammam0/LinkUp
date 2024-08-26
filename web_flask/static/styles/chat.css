@@ -19,9 +19,19 @@ header {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo img {
-  width: 24px;
-  margin-left: 155px;
+    width: 30px;
+    margin-left: 155px;
+}
+
+.logo img:hover {
+    cursor: pointer;
+    width: 32px;
 }
 
 nav {

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Link Up</title>
-  <link rel="icon" href="../static/images/logo.png" />
+  <title>{{ user.name }} (@{{ user.username }})</title>
+  <link rel="icon" href="../static/images/icon2.png" />
   <link rel="stylesheet" href="../static/styles/profile.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="../static/scripts/profile.js"></script>
@@ -14,9 +14,9 @@
     <!-- *** Navigation Header *** -->
     <header>
       <nav>
-          <div class="logo">
-              <img src="../static/images/logo_cut.png">
-          </div>
+          <a class="logo" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/logo_cut.png') }}" alt="Logo">
+          </a>
           
           <form id="search-form" autocomplete="off">
             <input id="search-input" type="text" placeholder="Search...">

@@ -88,9 +88,19 @@ header {
     filter: none;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo img {
-    width: 24px;
-    margin-left: 100px;
+    width: 30px;
+    margin-left: 90px;
+}
+
+.logo img:hover {
+    cursor: pointer;
+    width: 32px;
 }
 
 nav {
@@ -714,10 +724,10 @@ main {
     background-color: #895ea8;
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 6px 10px;
     cursor: pointer;
     margin-left: auto;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     border-radius: 20px;
     font-size: 12px;
 }

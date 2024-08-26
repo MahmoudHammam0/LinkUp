@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link Up</title>
-    <link rel="icon" href="../static/images/logo.png"/>
+    <link rel="icon" href="../static/images/icon2.png"/>
     <link rel="stylesheet" href="../static/styles/feed.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../static/scripts/feed.js"></script>
@@ -13,9 +13,9 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">
-                <img src="../static/images/logo_cut.png">
-            </div>
+            <a class="logo" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo_cut.png') }}" alt="Logo">
+            </a>
 
             <form id="search-form" autocomplete="off">
                 <input id="search-input" type="text" placeholder="Search...">
@@ -106,6 +106,7 @@
         <aside class="suggestions">
             <h3>People You May Know</h3>
             <ul>
+                <!--
                 <li>
                     <img src="../static/images/3.jpg" alt="User Avatar">
                     <span>Mahmoud Hammam</span>
@@ -116,6 +117,7 @@
                     <span>Youssef El Ghamour</span>
                     <button>Follow</button>
                 </li>
+                -->
             </ul>
         </aside>
     </main>
