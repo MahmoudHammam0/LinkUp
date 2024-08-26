@@ -58,7 +58,7 @@
 
     <!-- *** Search Results Section *** -->
     <!-- Data queries passed from Flask -->
-    <div id="data" data-queries="{{ queries|join(',') }}"></div>
+    <div id="data" data-queries="{{ queries|join(',') }}" data-current-user-id="{{ current_user.id }}"></div>
 
     <div id="results"></div> 
 

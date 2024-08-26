@@ -85,7 +85,7 @@ def search_results(keywords):
     "Search page"
     # Split keywords into a list based on spaces
     query_list = keywords.split(' ')
-    return render_template('search.html', queries=query_list)
+    return render_template('search.html', queries=query_list, current_user=current_user)
 
 
 @app.route('/logout')

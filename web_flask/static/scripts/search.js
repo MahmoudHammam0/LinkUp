@@ -1,4 +1,17 @@
 $(document).ready(function() {
+    // The current user id
+    const userId = $('#data').data('current-user-id');
+
+    let currentUser;
+    // Get the current user
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}`,
+        method: 'GET',
+        success: function(user) {
+            currentUser = user;
+        }
+    });
+    
     // Get the queries data attribute from the HTML
     const queriesString = $('#data').data('queries');
 
@@ -47,22 +60,47 @@ $(document).ready(function() {
                     user.name.toLowerCase().includes(keyword.toLowerCase())
                 );
 
-                if (filteredUsers.length > 0) {
-                    // Check if the "Users:" exist, so we don't add it twice for each keyword
-                    if (!usersHeadingAdded) {
-                        $usersContainer.append('<h2>Users:</h2>');
-                        usersHeadingAdded = true;
+                // followinglist of current user
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${userId}/following`,
+                    method: 'GET',
+                    success: function(users) {
+                        const followingUsers = users;
+                        console.log(followingUsers);
+
+                        if (filteredUsers.length > 0) {
+                            // Check if the "Users:" exist, so we don't add it twice for each keyword
+                            if (!usersHeadingAdded) {
+                                $usersContainer.append('<h2>Users:</h2>');
+                                usersHeadingAdded = true;
+                            }
+                            filteredUsers.forEach(user => {
+                                // Check if the user is already being followed by current_user
+                                let isFollowing = false;
+                                for (const key in followingUsers) {
+                                    console.log(`Checking user with key: ${key}`);
+                                    if (followingUsers[key].id === user.id) {
+                                        console.log(`Found matching ID: ${followingUsers[key].id}`);
+                                        isFollowing = true;
+                                        break;
+                                    }
+                                }
+                                // Change the class accordingly
+                                const buttonClass = isFollowing ? 'unfollow-button' : 'follow-button';
+                                // Change text to either follow or following
+                                const followText = isFollowing ? 'Following' : 'Follow';
+                                
+                                $usersContainer.append(
+                                    `<div class="result-item">
+                                        <img class="user-img" src="${user.profile_photo}" onclick="window.location.href='http://localhost:5000/profile/${user.id}';">
+                                        <h3 onclick="window.location.href='http://localhost:5000/profile/${user.id}';">${user.name}</h3>
+                                        <button class="${buttonClass}" data-user-id="${user.id}">${followText}</button>
+                                    </div>`
+                                );
+                            });
+                        }
                     }
-                    filteredUsers.forEach(user => {
-                        $usersContainer.append(
-                            `<div class="result-item">
-                                <img class="user-img" src="${user.profile_photo}" onclick="window.location.href='http://localhost:5000/profile/${user.id}';">
-                                <h3 onclick="window.location.href='http://localhost:5000/profile/${user.id}';">${user.name}</h3>
-                                <button class="follow-button" data-user-id="${user.id}">Follow</button>
-                            </div>`
-                        );
-                    });
-                }
+                });
             },
             error: function(xhr, status, error) {
                 console.error(`Error fetching users for keyword "${keyword}":`, error);
@@ -108,6 +146,78 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 console.error(`Error fetching posts for keyword "${keyword}":`, error);
+            }
+        });
+    });
+
+
+    // Follow Button
+    $(document).on('click', '.follow-button', function() {
+        const followButton = $(this);
+        const followUserId = $(this).data('user-id');
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${userId}/follow/${followUserId}`,
+            method: 'POST',
+            success: function() {
+                // Update the button after following the user: follow -> following
+                followButton.removeClass('follow-button').addClass('unfollow-button').text('Following')
+    
+                // Update the number of following
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${userId}/following`,
+                    type: 'GET',
+                    success: function (response) {
+                        let totalFollowing= 0;
+                        response.forEach(function (post) {
+                            totalFollowing++;
+                        });
+                        $('#following-count').text(`Following: ${totalFollowing}`);
+                    }
+                });
+
+                requestData = {
+                    auth_user_id: currentUser.id,
+                    user_id: followUserId
+                };
+        
+                // Create a new chat when following for the first time
+                $.ajax({
+                    url: "http://localhost:5001/api/v1/chats",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function(res) {
+                        console.log("chat created successfully", res);
+                    }
+                })
+            },
+        });
+    });
+
+    // Unfollow Button
+    $(document).on('click', '.unfollow-button', function() {
+        const unfollowButton = $(this);
+        const unfollowUserId = unfollowButton.data('user-id');
+    
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${userId}/unfollow/${unfollowUserId}`,
+            method: 'POST',
+            success: function() {
+                // Change button back to "Follow"
+                unfollowButton.removeClass('unfollow-button').addClass('follow-button').text('Follow');
+
+                // Update following count
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/users/${userId}/following`,
+                    type: 'GET',
+                    success: function (response) {
+                        let totalFollowing = 0;
+                        response.forEach(function (post) {
+                            totalFollowing++;
+                        });
+                        $('#following-count').text(`Following: ${totalFollowing}`);
+                    }
+                });
             }
         });
     });
