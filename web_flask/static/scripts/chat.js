@@ -35,6 +35,11 @@ $(document).ready(function() {
                         messageParagraph.addClass('sent');
                         messageDiv.append(messageParagraph);
                         messageDiv.append(`<img src="${message.sender_img}">`);
+                        if (message.read) {
+                            messageParagraph.append('<div class="status">✔✔</div>');
+                        } else {
+                            messageParagraph.append('<div class="status">✔</div>');
+                        }
                         messageDiv.css('justify-content', 'flex-end');
                     // Rceived messages
                     } else {
@@ -43,8 +48,10 @@ $(document).ready(function() {
                         messageDiv.append(messageParagraph);
                         messageDiv.css('justify-content', 'flex-start');
                     }
-
                     $('.messages').append(messageDiv);
+                    if (message.sender_id != currentUserId && !message.read) {
+                        markMessageAsRead(message.id);
+                    }
                 });
             }
         });
@@ -54,20 +61,23 @@ $(document).ready(function() {
 
     // Logic to send a message
     socket.on('message', function(data) {
-        senderId = data.senderId;
-        receiverId = data.receiverId;
-        content = data.messageContent;
-        senderImg = data.senderImg
+        const senderId = data.senderId;
+        const receiverId = data.receiverId;
+        const content = data.messageContent;
+        const senderImg = data.senderImg
 
         const messageParagraph = $('<p>').text(content);
         const messageDiv = $('<div>').addClass('message-div');
+        let sender = '';
 
         // We're sending
         if (senderId === currentUserId) {
             messageParagraph.addClass('sent');
             messageDiv.append(messageParagraph);
+            messageParagraph.append('<div class="status">✔</div>');
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.css('justify-content', 'flex-end');
+            sender = 'You: '
         // We're receiving
         // Only show messages from the other user, to prevent receing messages from everyone
         } else {
@@ -78,6 +88,9 @@ $(document).ready(function() {
         }
 
         $('.messages').append(messageDiv);
+        $('.current-chat h5').html(`${sender}${content}`);
+        $('.current-chat .time-ago').html(`• now`);
+        moveChatToTop(roomId);
         
     });
 
@@ -170,7 +183,13 @@ $(document).ready(function() {
                 `;
 
                 // add the chatItem to the chat list
-                chatList.append(chatItem);
+                const $chatItemElement = $(chatItem);
+
+                if (chat.id === roomId) {
+                    $chatItemElement.addClass('current-chat');
+                }
+
+                chatList.append($chatItemElement);
             });
 
             // Attach click event handler to each chat item, to open the chat
@@ -197,4 +216,23 @@ $(document).ready(function() {
             }
         }
     });
+
+    function moveChatToTop(chatId) {
+        const chatItem = $(`.chat-item[data-chat-id="${chatId}"]`);
+    
+        if (chatItem.length) {
+            chatItem.remove();
+            chatItem.insertAfter($('.chat-title'));
+        }
+    }
+
+    function markMessageAsRead(messageId) {
+        $.ajax({
+            url: `http://localhost:5001/api/v1/messages/${messageId}/read`,
+            method: 'PUT',
+            success: function(res) {
+                console.log(`Message ${messageId} marked as read`, res);
+            }
+        });
+    }
 });

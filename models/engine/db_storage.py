@@ -155,3 +155,12 @@ class DBStorage:
         if existing_chat:
             return existing_chat
         return None
+    
+
+    def get_last_message(self, chat_id):
+        "return the last message for specific chat"
+        latest_message = self.__session.query(Message).filter_by(chat_id=chat_id).order_by(Message.created_at.desc()).first()
+        if latest_message:
+            return latest_message.to_dict()
+        else:
+            return None

@@ -72,3 +72,15 @@ def update_message(message_id):
 
     message.save()
     return jsonify(message.to_dict())
+
+
+@app_views.route('/messages/<message_id>/read', methods=["PUT"])
+def mark_message_as_read(message_id):
+    "Mark a message as read for the current user"
+    message = storage.get(Message, message_id)
+    if message:
+        message.read = True
+        message.save()
+        return jsonify(message.to_dict()), 200
+    else:
+        abort(404)

@@ -336,3 +336,14 @@ p {
   color: #a561b1;
   font-weight: 400;
 }
+
+.current-chat {
+  background-color: #a561b117;
+}
+
+.status {
+  padding-right: 5px;
+  font-size: 12px;
+  letter-spacing: -3px;
+  text-align: right;
+}

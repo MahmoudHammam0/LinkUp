@@ -42,18 +42,16 @@ def get_chats_for_user(user_id):
             chat_dict['user_photo'] = other_user.profile_photo
 
             # Get the latest message
-            latest_message = None
-            for message in chat.messages:
-                if latest_message is None or message.created_at > latest_message.created_at:
-                    latest_message = message
+            latest_message = storage.get_last_message(chat.id)
 
             # Add the latest message to the chat dictionary
-            if latest_message:
-                chat_dict['latest_message'] = latest_message.to_dict()
-            else:
-                chat_dict['latest_message'] = None
+            chat_dict['latest_message'] = latest_message
 
             chats.append(chat_dict)
+            chats.sort(
+                key=lambda x: x['latest_message']['created_at'] if x['latest_message'] else '1970-01-01T00:00:00Z', 
+                reverse=True
+                )
         return jsonify(chats)
     else:
         abort(404)
@@ -69,6 +67,7 @@ def get_messages_for_chat(chat_id):
         for msg in chat.messages:
             user = storage.get(User, msg.sender_id)
             message_dict = msg.to_dict()
+            message_dict['read'] = msg.read
             message_dict['sender_img'] = user.profile_photo
             messages.append(message_dict)
         messages.sort(key=lambda x: x['created_at'])
