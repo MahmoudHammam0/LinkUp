@@ -359,6 +359,26 @@ $(document).ready(function() {
     
                             $('.comment-content').val('');
                             commentSection.html(commentSectionContent);
+
+                            // Update comment counter
+                            const commentCounter = postItem.find('.comments_no');
+                            const counterText = res.length === 1 ? '1 Comment' : `${res.length} Comments`;
+
+                            if (postItem.find('.comments_no').length === 0) {
+                                if (postItem.find('.likes_no').length === 0) {
+                                    postItem.find('.likes_no').after(`
+                                        <span class="comments_no">${counterText}</span>
+                                    `);
+                                } else {
+                                    postItem.find('.post-buttons').after(`
+                                        <div class="likes-counter">
+                                            <span class="comments_no">${counterText}</span>
+                                        </div>
+                                    `);
+                                }
+                            } else {
+                                commentCounter.html(counterText);
+                            }
                         }
                     });
                 },
