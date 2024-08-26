@@ -34,12 +34,14 @@ $(document).ready(function() {
                     if (message.sender_id === currentUserId) {
                         messageParagraph.addClass('sent');
                         messageDiv.append(messageParagraph);
-                        messageDiv.append(`<img src="${message.sender_img}">`);
+
                         if (message.read) {
-                            messageParagraph.append('<div class="status">✔✔</div>');
+                            messageDiv.append('<div class="status" id="blue-status">✔✔</div>');
                         } else {
-                            messageParagraph.append('<div class="status">✔</div>');
+                            messageDiv.append('<div class="status">✔</div>');
                         }
+                        
+                        messageDiv.append(`<img src="${message.sender_img}">`);
                         messageDiv.css('justify-content', 'flex-end');
                     // Rceived messages
                     } else {
@@ -53,8 +55,14 @@ $(document).ready(function() {
                         markMessageAsRead(message.id);
                     }
                 });
+
+                // Keeps the messages section at the bottom so we don't have to scroll down
+                var messageBody = document.querySelector('.messages');
+                messageBody.scrollTop = messageBody.scrollHeight;
             }
         });
+        
+        
     }
     
 
@@ -74,7 +82,7 @@ $(document).ready(function() {
         if (senderId === currentUserId) {
             messageParagraph.addClass('sent');
             messageDiv.append(messageParagraph);
-            messageParagraph.append('<div class="status">✔</div>');
+            messageDiv.append('<div class="status">✔</div>');
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.css('justify-content', 'flex-end');
             sender = 'You: '
@@ -88,6 +96,11 @@ $(document).ready(function() {
         }
 
         $('.messages').append(messageDiv);
+
+        // Keeps the messages section at the bottom so we don't have to scroll down
+        var messageBody = document.querySelector('.messages');
+        messageBody.scrollTop = messageBody.scrollHeight;
+
         $('.current-chat h5').html(`${sender}${content}`);
         $('.current-chat .time-ago').html(`• now`);
         moveChatToTop(roomId);

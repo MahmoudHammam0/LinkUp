@@ -78,6 +78,7 @@ nav ul li a {
   flex-direction: row;
   height: 92.9%;
   background: linear-gradient(42deg, #ded3eb -15%, #fff 80%);
+  background: linear-gradient(42deg, #ded3eb -15%, #ffeeee7d 80%);
 }
 
 #profile-icon {
@@ -119,13 +120,19 @@ nav ul li a {
 .sent {
     align-self: flex-end;
     background-color: #cfe9ff;
-    max-width: 300px;
+    max-width: 600px;
+    font-size: 15px;
+    padding: 11px 17px;
+    border-radius: 22px;
 }
 
 .received {
-    align-self: flex-start;
-    background-color: #f1f1f1;
-    max-width: 300px;
+  align-self: flex-start;
+  background-color: #ffffff;
+  max-width: 600px;
+  font-size: 15px;
+  padding: 11px 17px;
+  border-radius: 22px;
 }
 
 p {
@@ -156,6 +163,7 @@ p {
   padding: 10px 20px;
   margin-top: 10px;
   background-color: white;
+  margin-bottom: 10px;
 }
 
 .chat-header img {
@@ -227,6 +235,7 @@ p {
 .message-div {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .message-div img {
@@ -346,4 +355,12 @@ p {
   font-size: 12px;
   letter-spacing: -3px;
   text-align: right;
+  position: absolute;
+  color: #afafaf;
+  right: 3.8%;
+  bottom: -3px;
+}
+
+#blue-status {
+  color: #2196f3;
 }
