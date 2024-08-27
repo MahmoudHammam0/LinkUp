@@ -60,6 +60,10 @@ Once Link Up is set up, you can use the following steps to interact with the pla
 
 While Link Up currently offers features like chat and search, potential future enhancements could include advanced notification systems and additional functionalities to further engage and connect users.
 
+## Demo Video
+
+https://github.com/user-attachments/assets/3d0a629e-ba86-4991-8912-03930ad2b5eb
+
 ## Authors
 
 - Mahmoud Hammam - [GitHub](https://github.com/MahmoudHammam0)
