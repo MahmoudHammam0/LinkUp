@@ -40,6 +40,7 @@ def join_chat(data):
     users_ids = [user.id for user in chat.users]
     if chat and user_id in users_ids:
         join_room(room)
+        socketio.emit('user_joined', {'user_id': user_id}, room=room)
     else:
         send("Access denied.", to=request.sid)
         disconnect()
@@ -47,7 +48,21 @@ def join_chat(data):
 
 @socketio.on('message')
 def handle_message(data):
+    message = storage.get_last_message(data['message']['chatId'])
+    if message:
+        data['message']['id'] = message['id']
     send(data['message'], room=data['room'])
+
+
+@socketio.on('update_message_status')
+def handle_update_message_status(data):
+    from models.message import Message
+    message_id = data['messageToUpdate']
+    message = storage.get(Message, message_id)
+    if message:
+        message.read = True
+        storage.save()
+    socketio.emit('update_message_status', {'messageToUpdate': message_id}, room=data['room'])
 
 
 # @socketio.on('leave')

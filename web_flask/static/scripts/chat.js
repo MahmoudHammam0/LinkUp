@@ -12,7 +12,6 @@ $(document).ready(function() {
     const roomInfo = room.split('_');
     // roomId is the chat.id
     const roomId = roomInfo[roomInfo.length - 1];
-    console.log(roomId);
 
     // Let's the current user join the room/chat with the chat id
     socket.emit('join', { room: room, current_user_id: currentUserId });
@@ -28,7 +27,7 @@ $(document).ready(function() {
             success: function(res) {
                 res.forEach((message) => {
                     const messageParagraph = $('<p>').text(message.content);
-                    const messageDiv = $('<div>').addClass('message-div');
+                    const messageDiv = $('<div>').addClass('message-div').attr('data-message-id', message.id);
 
                     // Sent messages
                     if (message.sender_id === currentUserId) {
@@ -65,7 +64,29 @@ $(document).ready(function() {
         
     }
     
+    socket.on('user_joined', function(data) {
+        const joinedUserId = data.user_id;
+    
+        if (joinedUserId === otherUserId) {
+            console.log('Other user has joined the room');
+    
+            $('.message-div .status').each(function() {
+                const messageDiv = $(this).closest('.message-div');
+                const messageId = messageDiv.data('message-id');
+                
+                if ($(this).text() === '✔') {
+                    socket.emit('update_message_status', { messageToUpdate: messageId, room: room });
+                }
+            });
+        }
+    });
 
+    socket.on('update_message_status', function(data) {
+        const messageId = data.messageToUpdate;
+        
+        // Find the message with the specified ID and update its status
+        $(`.message-div[data-message-id="${messageId}"] .status`).text('✔✔').attr('id', 'blue-status');
+    });
 
     // Logic to send a message
     socket.on('message', function(data) {
@@ -73,26 +94,18 @@ $(document).ready(function() {
         const receiverId = data.receiverId;
         const content = data.messageContent;
         const senderImg = data.senderImg
+        const messageId = data.id
 
         const messageParagraph = $('<p>').text(content);
-        const messageDiv = $('<div>').addClass('message-div');
-        let sender = '';
+        const messageDiv = $('<div>').addClass('message-div').attr('data-message-id', messageId);
 
         // We're sending
-        if (senderId === currentUserId) {
-            messageParagraph.addClass('sent');
-            messageDiv.append(messageParagraph);
-            messageDiv.append('<div class="status">✔</div>');
-            messageDiv.append(`<img src="${senderImg}">`);
-            messageDiv.css('justify-content', 'flex-end');
-            sender = 'You: '
-        // We're receiving
-        // Only show messages from the other user, to prevent receing messages from everyone
-        } else {
+        if (senderId !== currentUserId) {
             messageParagraph.addClass('received');
             messageDiv.append(`<img src="${senderImg}">`);
             messageDiv.append(messageParagraph);
             messageDiv.css('justify-content', 'flex-start');
+            socket.emit('update_message_status', { messageToUpdate: messageId, room: room });
         }
 
         $('.messages').append(messageDiv);
@@ -110,27 +123,41 @@ $(document).ready(function() {
     // Send a message when we hit send/submit
     $('#message-form').on('submit', function(event) {
         event.preventDefault();
-        messageData = {
+        let messageData = {
             senderId: currentUserId,
             receiverId: otherUserId,
             senderImg: $('.user-photo img').attr('src'),
-            messageContent: $('#message').val()
+            messageContent: $('#message').val(),
+            chatId: roomId
         };
-        console.log(messageData)
         if (messageData.messageContent !== '') {
-            // Send the message through socket
-            socket.send({
-                message: messageData,
-                room: room
-            });
+            const tempMessageId = "ID";
+            
+            const messageParagraph = $('<p>').text(messageData.messageContent);
+            const messageDiv = $('<div>').addClass('message-div').attr('data-message-id', tempMessageId);
+            
+            messageParagraph.addClass('sent');
+            messageDiv.append(messageParagraph);
+            messageDiv.append('<div class="status">✔</div>');
+            messageDiv.append(`<img src="${messageData.senderImg}">`);
+            messageDiv.css('justify-content', 'flex-end');
+
+            $('.current-chat h5').html(`You: ${messageData.messageContent}`);
+            $('.current-chat .time-ago').html(`• now`);
+            moveChatToTop(roomId);
+            
+            $('.messages').append(messageDiv);
+
             $('#message').val('');
 
+            var messageBody = document.querySelector('.messages');
+            messageBody.scrollTop = messageBody.scrollHeight;
+            
             requestData = {
                 content: messageData.messageContent,
                 sender_id: messageData.senderId,
                 chat_id: roomId
             };
-            console.log(requestData)
             // Store the message in the database
             $.ajax({
                 url: "http://localhost:5001/api/v1/messages",
@@ -138,9 +165,15 @@ $(document).ready(function() {
                 contentType: "application/json",
                 data: JSON.stringify(requestData),
                 success: function(res) {
-                    console.log("Message created successfully", res);                    
+                    console.log("Message created successfully", res);
+                    socket.send({
+                        message: messageData,
+                        room: room
+                    });
+                    const newMessageId = res.id;
+                    $(`.message-div[data-message-id="${tempMessageId}"]`).attr('data-message-id', newMessageId);                    
                 }
-            })
+            });
         }
     });
 
@@ -171,6 +204,7 @@ $(document).ready(function() {
             data.forEach(chat => {
                 // Get the latest message content, or show a default text if there is no latest message
                 const latestMessage = chat.latest_message ? chat.latest_message.content : 'No messages yet';
+                const unreadNo = chat.unread ? chat.unread : '';
 
                 // Adds "You: " if the latest message was sent by the current (logged in) user
                 let sender = '';
@@ -191,12 +225,17 @@ $(document).ready(function() {
                                 ${sender}${latestMessage}
                             </h5>
                         </span>
+                        ${unreadNo ? `<div class="unread">${unreadNo}</div>` : ''}
                         ${createdAt ? `<h2 class="time-ago">• ${timeAgo}</h2>` : ''}
                     </div>
                 `;
 
                 // add the chatItem to the chat list
                 const $chatItemElement = $(chatItem);
+
+                if (unreadNo) {
+                    $chatItemElement.find('.latest-message').removeClass('latest-message').addClass('latest-message-unread');
+                }
 
                 if (chat.id === roomId) {
                     $chatItemElement.addClass('current-chat');
@@ -208,7 +247,21 @@ $(document).ready(function() {
             // Attach click event handler to each chat item, to open the chat
             $('.chat-item').on('click', function() {
                 const chatId = $(this).data('chat-id');
-                window.location.href = `/chat/${chatId}`;
+                const latestMessage = $(this).find('.latest-message-unread');
+                if (latestMessage.length > 0) {
+                    console.log("entered a chat item with unreaded messages")
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/chats/${chatId}/mark_read`,
+                        method: "PUT",
+                        dataType: "json",
+                        success: function(res) {
+                            window.location.href = `/chat/${chatId}`;
+                            console.log(res);
+                        }
+                    });
+                } else {
+                    window.location.href = `/chat/${chatId}`;
+                }
             });
         },
         error: function() {

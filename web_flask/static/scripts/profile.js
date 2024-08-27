@@ -127,22 +127,80 @@ $(document).ready(function() {
     if (openFormBtn && overlay) {
         openFormBtn.addEventListener('click', () => {
             overlay.style.display = 'flex';
+            console.log(currentUserObject)
             $('.form-container').html(`
                 <div class="edit-header">
                     <h2>Edit profile</h2>
                     <div id="closeFormBtn" class="close-btn">X</div>
                 </div>
                 <div class="edit-info">
-                    <h4>Bio</h4>
-                    <h4>Education</h4>
-                    <h4>Work</h4>
-                    <h4>Location</h4>
-                    <h4>Phone</h4>
+                    <div class="info-details bio-edit">
+                        <h3>Bio</h3>
+                        <h4>${currentUserObject.bio}</h4>
+                        <button>Edit</button>
+                    </div>
+                    <div class="info-details educ-edit">
+                        <h3>Education</h3>
+                        <h4>${currentUserObject.education}</h4>
+                        <button>Edit</button>
+                    </div>
+                    <div class="info-details work-edit">
+                        <h3>Work</h3>
+                        <h4>${currentUserObject.work}</h4>
+                        <button>Edit</button>
+                    </div>
+                    <div class="info-details loc-edit">
+                        <h3>Location</h3>
+                        <h4>${currentUserObject.location}</h4>
+                        <button>Edit</button>
+                    </div>
+                    <div class="info-details phone-edit">
+                        <h3>Phone</h3>
+                        <h4>${currentUserObject.phone}</h4>
+                        <button>Edit</button>
+                    </div>
                 </div>`
             );
     
             $('#closeFormBtn').on('click', () => {
                 overlay.style.display = 'none';
+            });
+
+            $('.info-details button').on('click', function() {
+                const parentDiv = $(this).closest('.info-details');
+                const fieldName = parentDiv.find('h3').text();
+                
+                if (!parentDiv.find('input').length) {
+                    parentDiv.find('h4').remove();
+                    parentDiv.find('h3').after(`<input type="text" placeholder="Enter your ${fieldName.toLowerCase()}">`);
+                }
+    
+                $(this).text('Save');
+            });
+
+            $('.info-details button').on('click', function() {
+                const parentDiv = $(this).closest('.info-details');
+                const fieldName = parentDiv.find('h3').text().toLowerCase();
+                const inputValue = parentDiv.find('input').val();
+
+                if (inputValue && $(this).text() === 'Save') {
+                    const requestData = {
+                        [fieldName]: inputValue
+                    }
+
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/users/${currentUserId}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify(requestData),
+                        success: function(res) {
+                            console.log(`${fieldName} updated successfully`, res);
+                            parentDiv.find('input').remove();
+                            parentDiv.find('button').text('Edit');
+                            location.reload();
+                        }
+                    })
+                }
             });
         });
     }

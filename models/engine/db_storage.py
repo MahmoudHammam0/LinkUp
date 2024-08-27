@@ -164,3 +164,21 @@ class DBStorage:
             return latest_message.to_dict()
         else:
             return None
+        
+
+    def get_unread_messages(self, chat_id, user_id):
+        "returns the number of unread messages in a specific chat that is sent by the other user"
+        unread_no = self.__session.query(Message).filter_by(chat_id=chat_id, sender_id=user_id, read=False).all()
+        if unread_no:
+            return len(unread_no)
+        else:
+            return None
+        
+
+    def get_all_unread_messages(self, chat_id):
+        "return all unread messages in a chat"
+        messages = self.__session.query(Message).filter_by(chat_id=chat_id, read=False).all()
+        if messages:
+            return messages
+        else:
+            return None

@@ -424,7 +424,7 @@ nav ul li a {
 }
 
 .info h4 {
-  margin: 6px 0;
+  margin: 15px 0;
 }
 
 h2 {
@@ -569,6 +569,44 @@ h6 {
 
 .edit-info {
   padding: 0 25px;
+}
+
+.info-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+}
+
+.info-details h3 {
+  margin: 15px 0;
+  width: 10%;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.info-details h4 {
+  margin: 15px 0;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.info-details input {
+  padding: 10px;
+  width: 50%;
+  border: 1px solid #c9c9c9;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.info-details button {
+  padding: 8px 10px;
+  background-color: #fff;
+  color: #0056b3;
+}
+
+.info-details button:hover {
+  background-color: #ebebeb9c;
 }
 
 .likes-counter {

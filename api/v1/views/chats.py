@@ -44,8 +44,14 @@ def get_chats_for_user(user_id):
             # Get the latest message
             latest_message = storage.get_last_message(chat.id)
 
+            # Get the unread messages
+            unread_no = storage.get_unread_messages(chat.id, other_user.id)
+
             # Add the latest message to the chat dictionary
             chat_dict['latest_message'] = latest_message
+
+            # Add the unread messages to the chat dictionary
+            chat_dict['unread'] = unread_no
 
             chats.append(chat_dict)
             chats.sort(
@@ -134,3 +140,14 @@ def update_chat(chat_id):
 
     chat.save()
     return jsonify(chat.to_dict())
+
+
+@app_views.route('/chats/<chat_id>/mark_read', methods=["PUT"])
+def mark_unread_messages_read(chat_id):
+    "mark all unread messages in a chat as read"
+    messages = storage.get_all_unread_messages(chat_id)
+    if messages:
+        for msg in messages:
+            msg.read = True
+            msg.save()
+        return jsonify({"Success": "all messages marked read"})

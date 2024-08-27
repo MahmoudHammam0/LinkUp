@@ -323,6 +323,17 @@ p {
   white-space: nowrap;
 }
 
+.latest-message-unread {
+  margin: 0;
+  font-weight: bold;
+  color: #13131398;
+  overflow: hidden;
+  width: 190px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
 .time-ago {
   color: #00000099;
   font-size: 13px;
@@ -373,4 +384,14 @@ p {
 
 #blue-status {
   color: #2196f3;
+}
+
+.unread {
+  margin: 0;
+  font-size: 12px;
+  margin-left: auto;
+  color: #fff;
+  background-color: #f00e0e;
+  border-radius: 50%;
+  padding: 3px 6px;
 }
