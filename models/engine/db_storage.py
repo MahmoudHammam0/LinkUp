@@ -182,3 +182,12 @@ class DBStorage:
             return messages
         else:
             return None
+        
+
+    def get_all_notifications_for_user(self, user_id):
+        "return all notifications for a user"
+        notifys = self.__session.query(Notification).filter_by(user_id=user_id).all()
+        if notifys:
+            return notifys
+        else:
+            return None

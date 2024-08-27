@@ -215,6 +215,24 @@ $(document).ready(function() {
         }
     });
 
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${currentUserId}/notifys`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            let unreadCount = 0;
+            res.forEach((notify) => {
+                if (!notify.read) {
+                    unreadCount++;
+                }
+            })
+
+            if (unreadCount > 0) {
+                $('.notification-count').text(unreadCount);
+            }
+        }
+    });
+
     // Populates the profile page with the user's posts
     $.ajax({
         url: `http://localhost:5001/api/v1/users/${userId}`,
@@ -439,6 +457,22 @@ $(document).ready(function() {
                             }
                         }
                     });
+
+                    const notifyData = {
+                        content: `${currentUserObject.name} commented your post`,
+                        type: 'comment',
+                        user_id: userId
+                    }
+    
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/notifys`,
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(notifyData),
+                        success: function(res) {
+                            console.log(res);
+                        }
+                    })
                 },
                 error: function(err) {
                     console.error("Error creating comment", err);
@@ -516,6 +550,22 @@ $(document).ready(function() {
                 newLikeImage.hide().show(0);
 
                 postItem.find('.likes').addClass('unlike').removeClass('likes');
+
+                const notifyData = {
+                    content: `${currentUserObject.name} liked your post`,
+                    type: 'like',
+                    user_id: userId
+                }
+
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/notifys`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(notifyData),
+                    success: function(res) {
+                        console.log(res);
+                    }
+                })
             }
         });
     });
@@ -616,6 +666,22 @@ $(document).ready(function() {
                         isFollowing = true;
                     }
                 })
+
+                const notifyData = {
+                    content: `${currentUserObject.name} followed you`,
+                    type: 'follow',
+                    user_id: userId
+                }
+
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/notifys`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(notifyData),
+                    success: function(res) {
+                        console.log(res);
+                    }
+                })
             },
         });
     });
@@ -645,6 +711,41 @@ $(document).ready(function() {
     }).on('mouseleave', '.unfollow-button', function() {
         if (isFollowing === true) {
             $(this).text('Following');  // Change text back to 'Following' on hover out
+        }
+    });
+
+    $('#notification-bell').on('click', function() {
+        $('.notification-dropdown ul').empty();
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${currentUserObject.id}/notifys`,
+            method: "GET",
+            dataType: "json",
+            success: function(res) {
+                res.forEach((notify) => {
+                    $('.notification-dropdown ul').append(`<li class="notification-item">${notify.content}</li>`);
+                    $.ajax({
+                        url:`http://localhost:5001/api/v1/notifys/${notify.id}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            read: true
+                        }),
+                        success: function(res) {
+                            console.log("updated read successfully", res);
+                        }
+                    })
+                });
+
+                $('.notification-dropdown').toggle();
+                $('.notification-count').remove();
+            }
+        });
+    });
+
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.notification-container').length) {
+            $('.notification-dropdown').hide();
+            $('.notification-dropdown ul').empty();
         }
     });
 

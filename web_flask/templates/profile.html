@@ -6,6 +6,7 @@
   <title>{{ user.name }} (@{{ user.username }})</title>
   <link rel="icon" href="../static/images/icon2.png" />
   <link rel="stylesheet" href="../static/styles/profile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="../static/scripts/profile.js"></script>
 </head>
@@ -35,6 +36,21 @@
                   <a class="profile-icon active" href="{{ url_for('profile', user_id=current_user.id) }}">
                       <img class="nav-icon" id="profile-icon" src="../static/images/profile-icon.png">
                   </a>
+              </li>
+
+              <!--Notifications-->
+              <li>
+                <div class="notification-container">
+                  <div id="notification-bell" class="notification-bell">
+                      <i class="fas fa-bell"></i>
+                      <span class="notification-count"></span>
+                  </div>
+              
+                  <div class="notification-dropdown" style="display: none;">
+                      <ul>
+                      </ul>
+                  </div>
+                </div>
               </li>
               
               <!--Messages-->

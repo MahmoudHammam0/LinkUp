@@ -124,6 +124,20 @@ def get_followers_of_user(user_id):
     return jsonify(followers)
 
 
+@app_views.route('/users/<user_id>/notifys', methods=["GET"])
+def get_user_notifications(user_id):
+    "returns all notifys for a user"
+    notifys = storage.get_all_notifications_for_user(user_id)
+    all_notifys = []
+    if notifys:
+        for notify in notifys:
+            all_notifys.append(notify.to_dict())
+        all_notifys.sort(key=lambda x: x['created_at'], reverse=True)
+        return jsonify(all_notifys)
+    else:
+        abort(404)
+
+
 @app_views.route("/users/<user_id>/following", methods=["GET"])
 def get_following_of_user(user_id):
     "return users that the current user is following"

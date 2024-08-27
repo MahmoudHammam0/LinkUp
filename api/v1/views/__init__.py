@@ -12,3 +12,4 @@ from api.v1.views.comments import *
 from api.v1.views.likes import *
 from api.v1.views.chats import *
 from api.v1.views.messages import *
+from api.v1.views.notifications import *

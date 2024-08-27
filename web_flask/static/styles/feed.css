@@ -745,3 +745,63 @@ footer {
     margin-top: 20px;
     width: -webkit-fill-available;
 }
+
+.notification-container {
+    position: relative;
+}
+
+.notification-bell {
+    cursor: pointer;
+    position: relative;
+}
+
+.notification-count {
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    padding: 0px 4px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+.fas {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 22px;
+    color: #8c368f;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    width: 300px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.notification-dropdown ul {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+    width: 300px;
+    display: block;
+}
+
+.notification-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f1f1f1;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
+}

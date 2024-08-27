@@ -35,6 +35,24 @@ $(document).ready(function() {
         }
     });
 
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${userId}/notifys`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            let unreadCount = 0;
+            res.forEach((notify) => {
+                if (!notify.read) {
+                    unreadCount++;
+                }
+            })
+
+            if (unreadCount > 0) {
+                $('.notification-count').text(unreadCount);
+            }
+        }
+    });
+
 
     // Navigation bar section **********************************************
 
@@ -300,7 +318,7 @@ $(document).ready(function() {
                 }
 
                 postsHTML += `
-                    <article class="post" data-id="${post.id}">
+                    <article class="post" data-id="${post.id}" data-user-id="${post.user_id}">
                         <header>
                             <img src="${post.user_photo}" alt="User Avatar" onclick="window.location.href='/profile/${post.user_id}';" style="cursor: pointer;">
                             <div class="user-info">
@@ -347,6 +365,7 @@ $(document).ready(function() {
     $('.feed').on('click', '.likes', function() {
         const postItem = $(this).closest('.post');
         const postId = postItem.data('id');
+        const otherUser = postItem.data('user-id');
         const requestData = {
             user_id: userId,
             post_id: postId
@@ -412,6 +431,22 @@ $(document).ready(function() {
                 newLikeImage.hide().show(0);
 
                 postItem.find('.likes').addClass('unlike').removeClass('likes');
+
+                const notifyData = {
+                    content: `${currentUserObject.name} liked your post`,
+                    type: 'like',
+                    user_id: otherUser
+                }
+
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/notifys`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(notifyData),
+                    success: function(res) {
+                        console.log(res);
+                    }
+                })
             }
         });
     });
@@ -471,6 +506,7 @@ $(document).ready(function() {
     // Show post comments when you click on comment button
     $('.feed').on('click', '.comment-group, .comments_no', function() {
         const postItem = $(this).closest('.post');
+        const otherUser = postItem.data('user-id');
 
         // Add id to these elements so we can click on it to hide the comments 
         postItem.find('.comment-group').attr('id', 'hide-comments');
@@ -546,6 +582,7 @@ $(document).ready(function() {
         event.preventDefault();
     
         const postItem = $(this).closest('.post');
+        const otherUser = postItem.data('user-id');
         const commentSection = postItem.find('.prev-comments');
         const commentContent = $(this).find('.comment-content').val();
         const postId = postItem.data('id');
@@ -610,6 +647,22 @@ $(document).ready(function() {
                             }
                         }.bind(this)
                     });
+
+                    const notifyData = {
+                        content: `${currentUserObject.name} commented on your post`,
+                        type: 'comment',
+                        user_id: otherUser
+                    }
+    
+                    $.ajax({
+                        url: `http://localhost:5001/api/v1/notifys`,
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(notifyData),
+                        success: function(res) {
+                            console.log(res);
+                        }
+                    })
                 },
                 error: function(err) {
                     console.error("Error creating comment", err);
@@ -743,6 +796,22 @@ $(document).ready(function() {
                         console.log("chat created successfully", res);
                     }
                 })
+
+                const notifyData = {
+                    content: `${currentUserObject.name} followed you`,
+                    type: 'follow',
+                    user_id: followUserId
+                }
+
+                $.ajax({
+                    url: `http://localhost:5001/api/v1/notifys`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(notifyData),
+                    success: function(res) {
+                        console.log(res);
+                    }
+                })
             },
         });
     });
@@ -773,6 +842,41 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $('#notification-bell').on('click', function() {
+        $('.notification-dropdown ul').empty();
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${currentUserObject.id}/notifys`,
+            method: "GET",
+            dataType: "json",
+            success: function(res) {
+                res.forEach((notify) => {
+                    $('.notification-dropdown ul').append(`<li class="notification-item">${notify.content}</li>`);
+                    $.ajax({
+                        url:`http://localhost:5001/api/v1/notifys/${notify.id}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            read: true
+                        }),
+                        success: function(res) {
+                            console.log("updated read successfully", res);
+                        }
+                    })
+                });
+
+                $('.notification-dropdown').toggle();
+                $('.notification-count').remove();
+            }
+        });
+    });
+
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.notification-container').length) {
+            $('.notification-dropdown').hide();
+            $('.notification-dropdown ul').empty();
+        }
     });
 
 });

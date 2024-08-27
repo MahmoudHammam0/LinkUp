@@ -16,6 +16,24 @@ $(document).ready(function() {
     // Let's the current user join the room/chat with the chat id
     socket.emit('join', { room: room, current_user_id: currentUserId });
 
+    $.ajax({
+        url: `http://localhost:5001/api/v1/users/${currentUserId}/notifys`,
+        method: "GET",
+        dataType: "json",
+        success: function(res) {
+            let unreadCount = 0;
+            res.forEach((notify) => {
+                if (!notify.read) {
+                    unreadCount++;
+                }
+            })
+
+            if (unreadCount > 0) {
+                $('.notification-count').text(unreadCount);
+            }
+        }
+    });
+
 
     // Populate the chat section with old messages stored in the database
     // Do that only when we open a chat (has room id), not for messages page
@@ -301,4 +319,40 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('#notification-bell').on('click', function() {
+        $('.notification-dropdown ul').empty();
+        $.ajax({
+            url: `http://localhost:5001/api/v1/users/${currentUserId}/notifys`,
+            method: "GET",
+            dataType: "json",
+            success: function(res) {
+                res.forEach((notify) => {
+                    $('.notification-dropdown ul').append(`<li class="notification-item">${notify.content}</li>`);
+                    $.ajax({
+                        url:`http://localhost:5001/api/v1/notifys/${notify.id}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            read: true
+                        }),
+                        success: function(res) {
+                            console.log("updated read successfully", res);
+                        }
+                    })
+                });
+
+                $('.notification-dropdown').toggle();
+                $('.notification-count').remove();
+            }
+        });
+    });
+
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.notification-container').length) {
+            $('.notification-dropdown').hide();
+            $('.notification-dropdown ul').empty();
+        }
+    });
+
 });
